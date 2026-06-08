@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Calorie Tracker Plus</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    
     <style>
         * {
             box-sizing: border-box;
@@ -408,7 +412,6 @@
 
     <script>
         // --- 1. DATA MIGRATION & SETUP ---
-        // Automatically upgrades old purely number-based data to the new object format
         let rawHistory = JSON.parse(localStorage.getItem('calorieHistory')) || {};
         let history = {};
         for (let date in rawHistory) {
