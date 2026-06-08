@@ -1,0 +1,15 @@
+{
+  "short_name": "CalTracker",
+  "name": "Fitness Tracker",
+  "display": "standalone",
+  "start_url": "index.html",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

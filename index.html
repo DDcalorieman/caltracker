@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calorie Tracker Plus</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 1.5rem;
+            overflow-x: hidden;
+        }
+
+        /* Date Navigation Header */
+        .date-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto 1.5rem auto;
+            padding-top: 0.5rem;
+        }
+
+        .date-btn {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            color: #fff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.1s;
+        }
+
+        .date-btn:active {
+            background-color: #333;
+        }
+
+        .date-display {
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Hero Layout: Circle Left, Metrics Right */
+        .hero-container {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto 2rem auto;
+            align-items: center;
+        }
+
+        /* Left: Circular Progress */
+        .display-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 190px;
+            height: 190px;
+        }
+
+        .progress-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+            pointer-events: none;
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: #222;
+            stroke-width: 10;
+        }
+
+        .ring-progress {
+            fill: none;
+            stroke: #34C759;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 534.07; /* 2 * pi * 85 */
+            stroke-dashoffset: 534.07;
+            transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
+        }
+
+        .ring-progress.over-target {
+            stroke: #FF3B30;
+        }
+
+        .circle-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .count {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: -2px;
+            transition: transform 0.1s ease;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .target-btn {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            color: #aaa;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .target-btn:active {
+            border-color: #555;
+            color: #fff;
+        }
+
+        /* Right: Side Metrics */
+        .side-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .metric-box {
+            background: #1a1a1a;
+            padding: 0.65rem 1rem;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+
+        .metric-title {
+            color: #888;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.2rem;
+        }
+
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .val-red { color: #FF3B30; }
+        .val-green { color: #34C759; }
+        .val-neutral { color: #ffffff; }
+
+        /* Number Buttons Grid */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .btn {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #333;
+            border-radius: 14px;
+            padding: 1.25rem 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.1s, transform 0.1s;
+        }
+
+        .btn:active {
+            background-color: #333;
+            transform: scale(0.95);
+        }
+
+        .btn-minus {
+            color: #ff8888;
+            border-color: #442222;
+        }
+
+        /* Extras Section (Inputs) */
+        .extras-container {
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto 2rem auto;
+            background: #151515;
+            border-radius: 16px;
+            border: 1px solid #222;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .extra-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .extra-label {
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        .extra-input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            width: 120px;
+            text-align: right;
+            font-size: 1rem;
+        }
+        
+        .extra-input:focus {
+            outline: none;
+            border-color: #555;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toggle-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #888;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 60px;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active-yes {
+            background: #233526;
+            border-color: #34C759;
+            color: #34C759;
+        }
+
+        .toggle-btn.active-no {
+            background: #3a1c1c;
+            border-color: #FF3B30;
+            color: #FF3B30;
+        }
+
+        /* Stats & Export Section */
+        .stats-container {
+            max-width: 450px;
+            margin: 0 auto;
+            width: 100%;
+            border-top: 1px solid #222;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .average-box {
+            background-color: #1a1a1a;
+            padding: 1.25rem;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border: 1px solid #222;
+        }
+
+        .avg-label {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .avg-val {
+            font-size: 1.75rem;
+            font-weight: 400;
+        }
+
+        .export-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            padding: 1rem;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .export-btn:active {
+            background-color: #222;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="date-header">
+        <button class="date-btn" onclick="changeDate(-1)">&#8592;</button>
+        <div class="date-display" id="date-label">Today</div>
+        <button class="date-btn" onclick="changeDate(1)">&#8594;</button>
+    </div>
+
+    <div class="hero-container">
+        <div class="display-container">
+            <svg class="progress-ring" width="190" height="190">
+                <circle class="ring-bg" cx="95" cy="95" r="85"></circle>
+                <circle class="ring-progress" id="progress-circle" cx="95" cy="95" r="85"></circle>
+            </svg>
+            <div class="circle-content">
+                <div class="count" id="calorie-display">0</div>
+                <div class="target-btn" onclick="setTarget()">Goal: <span id="target-display">2500</span></div>
+            </div>
+        </div>
+
+        <div class="side-metrics">
+            <div class="metric-box">
+                <div class="metric-title">Gym</div>
+                <div class="metric-value" id="display-gym">--</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Weight</div>
+                <div class="metric-value" id="display-weight">--</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Steps</div>
+                <div class="metric-value" id="display-steps">--</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-grid">
+        <button class="btn" onclick="adjustCalories(100)">+100</button>
+        <button class="btn" onclick="adjustCalories(200)">+200</button>
+        <button class="btn" onclick="adjustCalories(300)">+300</button>
+        <button class="btn" onclick="adjustCalories(500)">+500</button>
+        <button class="btn" onclick="adjustCalories(1000)">+1000</button>
+        <button class="btn btn-minus" onclick="adjustCalories(-100)">-100</button>
+    </div>
+
+    <div class="extras-container">
+        <div class="extra-row">
+            <span class="extra-label">Gym Session?</span>
+            <div class="toggle-group">
+                <button class="toggle-btn" id="btn-gym-yes" onclick="setGym(true)">Yes</button>
+                <button class="toggle-btn" id="btn-gym-no" onclick="setGym(false)">No</button>
+            </div>
+        </div>
+        <div class="extra-row">
+            <span class="extra-label">Weight (kg)</span>
+            <input type="number" step="0.1" class="extra-input" id="input-weight" oninput="setWeight(this.value)" placeholder="0.0">
+        </div>
+        <div class="extra-row">
+            <span class="extra-label">Steps</span>
+            <input type="number" class="extra-input" id="input-steps" oninput="setSteps(this.value)" placeholder="0">
+        </div>
+    </div>
+
+    <div class="stats-container">
+        <div class="average-box">
+            <div class="avg-label">7-Day Cal Average</div>
+            <div class="avg-val" id="avg-display">0</div>
+        </div>
+        <button class="export-btn" onclick="exportCSV()">Export Data (CSV)</button>
+    </div>
+
+    <script>
+        // --- 1. DATA MIGRATION & SETUP ---
+        // Automatically upgrades old purely number-based data to the new object format
+        let rawHistory = JSON.parse(localStorage.getItem('calorieHistory')) || {};
+        let history = {};
+        for (let date in rawHistory) {
+            if (typeof rawHistory[date] === 'number') {
+                history[date] = { calories: rawHistory[date], weight: null, gym: false, steps: null };
+            } else {
+                history[date] = rawHistory[date];
+            }
+        }
+        
+        let dailyTarget = parseInt(localStorage.getItem('dailyTarget')) || 2500;
+        const CIRCUMFERENCE = 534.07; // 2 * pi * 85
+
+        function getRealTodayStr() {
+            const now = new Date();
+            return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        }
+
+        let realToday = getRealTodayStr();
+        let viewDateStr = realToday;
+
+        // UI Element Selectors
+        const display = document.getElementById('calorie-display');
+        const targetDisplay = document.getElementById('target-display');
+        const dateLabel = document.getElementById('date-label');
+        const avgDisplay = document.getElementById('avg-display');
+        const progressCircle = document.getElementById('progress-circle');
+        
+        // Display Selectors
+        const dispGym = document.getElementById('display-gym');
+        const dispWeight = document.getElementById('display-weight');
+        const dispSteps = document.getElementById('display-steps');
+
+        // Input Selectors
+        const btnGymYes = document.getElementById('btn-gym-yes');
+        const btnGymNo = document.getElementById('btn-gym-no');
+        const inWeight = document.getElementById('input-weight');
+        const inSteps = document.getElementById('input-steps');
+
+        // --- 2. UTILITY FUNCTIONS ---
+        function addDaysStr(dateStr, days) {
+            const [y, m, d] = dateStr.split('-');
+            const date = new Date(y, m - 1, d);
+            date.setDate(date.getDate() + days);
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function formatDisplayDate(dateStr) {
+            if (dateStr === realToday) return "Today";
+            if (dateStr === addDaysStr(realToday, -1)) return "Yesterday";
+            if (dateStr === addDaysStr(realToday, 1)) return "Tomorrow";
+            const [y, m, d] = dateStr.split('-');
+            const date = new Date(y, m - 1, d);
+            return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+
+        function ensureDayExists(dateStr) {
+            if (typeof history[dateStr] === 'undefined') {
+                history[dateStr] = { calories: 0, weight: null, gym: false, steps: null };
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('calorieHistory', JSON.stringify(history));
+        }
+
+        // --- 3. INPUT HANDLERS ---
+        function changeDate(direction) {
+            viewDateStr = addDaysStr(viewDateStr, direction);
+            updateUI();
+        }
+
+        function setTarget() {
+            const input = prompt("Enter your daily calorie target:", dailyTarget);
+            if (input !== null && !isNaN(input) && input > 0) {
+                dailyTarget = parseInt(input);
+                localStorage.setItem('dailyTarget', dailyTarget);
+                updateUI();
+            }
+        }
+
+        function adjustCalories(amount) {
+            ensureDayExists(viewDateStr);
+            history[viewDateStr].calories += amount;
+            if (history[viewDateStr].calories < 0) history[viewDateStr].calories = 0;
+            
+            display.style.transform = 'scale(1.05)';
+            setTimeout(() => display.style.transform = 'scale(1)', 100);
+            updateUI();
+        }
+
+        function setGym(status) {
+            ensureDayExists(viewDateStr);
+            history[viewDateStr].gym = status;
+            updateUI();
+        }
+
+        function setWeight(val) {
+            ensureDayExists(viewDateStr);
+            history[viewDateStr].weight = val ? parseFloat(val).toFixed(1) : null;
+            saveState(); // Save silently so we don't lose focus on the input box
+            updateTopMetrics(); // Update visual instantly
+        }
+
+        function setSteps(val) {
+            ensureDayExists(viewDateStr);
+            history[viewDateStr].steps = val ? parseInt(val) : null;
+            saveState(); 
+            updateTopMetrics(); 
+        }
+
+        // --- 4. RENDER UI ---
+        function updateTopMetrics() {
+            ensureDayExists(viewDateStr);
+            const dayData = history[viewDateStr];
+
+            // Render Gym Top
+            if (dayData.gym === true) {
+                dispGym.innerHTML = `<span class="val-green">Yes</span>`;
+            } else {
+                dispGym.innerHTML = `<span class="val-red">No</span>`;
+            }
+
+            // Render Weight Top
+            if (dayData.weight) {
+                dispWeight.innerHTML = `<span class="val-neutral">${dayData.weight} kg</span>`;
+            } else {
+                dispWeight.innerHTML = `<span class="val-neutral">--</span>`;
+            }
+
+            // Render Steps Top
+            if (dayData.steps) {
+                dispSteps.innerHTML = `<span class="val-neutral">${parseInt(dayData.steps).toLocaleString()}</span>`;
+            } else {
+                dispSteps.innerHTML = `<span class="val-neutral">--</span>`;
+            }
+        }
+
+        function updateUI() {
+            ensureDayExists(viewDateStr);
+            const dayData = history[viewDateStr];
+            const currentCals = dayData.calories;
+
+            // Update Text
+            dateLabel.textContent = formatDisplayDate(viewDateStr);
+            display.textContent = currentCals;
+            targetDisplay.textContent = dailyTarget;
+
+            // Sync Input Fields to the current viewDate
+            inWeight.value = dayData.weight || '';
+            inSteps.value = dayData.steps || '';
+            
+            // Sync Gym Buttons
+            if (dayData.gym === true) {
+                btnGymYes.classList.add('active-yes');
+                btnGymNo.classList.remove('active-no');
+            } else {
+                btnGymYes.classList.remove('active-yes');
+                btnGymNo.classList.add('active-no');
+            }
+
+            // Update Top Section Metrics
+            updateTopMetrics();
+            saveState();
+
+            // Update Circle Ring
+            const percentage = Math.min(currentCals / dailyTarget, 1);
+            const offset = CIRCUMFERENCE - (percentage * CIRCUMFERENCE);
+            progressCircle.style.strokeDashoffset = offset;
+
+            if (currentCals > dailyTarget) {
+                progressCircle.classList.add('over-target');
+            } else {
+                progressCircle.classList.remove('over-target');
+            }
+
+            // Update 7-Day Average
+            const dates = Object.keys(history).sort().reverse();
+            let sum = 0; let count = 0;
+            for (let i = 0; i < Math.min(7, dates.length); i++) {
+                let c = history[dates[i]].calories || 0;
+                if (c > 0 || dates[i] === realToday) {
+                    sum += c;
+                    count++;
+                }
+            }
+            avgDisplay.textContent = count === 0 ? 0 : Math.round(sum / count).toLocaleString();
+        }
+
+        // --- 5. EXPORT CSV ---
+        function exportCSV() {
+            if (Object.keys(history).length === 0) {
+                alert("No data to export yet!");
+                return;
+            }
+
+            let csvContent = "Date,Calories,Weight (kg),Gym Session,Steps\n";
+            const sortedDates = Object.keys(history).sort();
+            
+            sortedDates.forEach(date => {
+                let d = history[date];
+                let cals = d.calories || 0;
+                let weight = d.weight || "";
+                let gym = d.gym ? "Yes" : "No";
+                let steps = d.steps || "";
+                csvContent += `${date},${cals},${weight},${gym},${steps}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", `fitness_history_${getRealTodayStr()}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- 6. EVENT LISTENERS ---
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === 'visible') {
+                const checkToday = getRealTodayStr();
+                if (checkToday !== realToday) {
+                    realToday = checkToday;
+                    viewDateStr = realToday; 
+                    updateUI();
+                }
+            }
+        });
+
+        // Init
+        updateUI();
+    </script>
+</body>
+</html>
