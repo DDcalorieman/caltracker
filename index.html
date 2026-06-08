@@ -22,12 +22,23 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            padding: 1.5rem;
             overflow-x: hidden;
         }
 
-        /* Date Navigation Header */
-        .date-header {
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- MAIN VIEW STYLES --- */
+        #main-view {
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        /* Date Header */
+        .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -37,14 +48,33 @@
             padding-top: 0.5rem;
         }
 
+        .date-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .date-display-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-width: 110px;
+        }
+
+        .date-display {
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
         .date-btn {
             background: #1e1e1e;
             border: 1px solid #333;
             color: #fff;
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -57,12 +87,23 @@
             background-color: #333;
         }
 
-        .date-display {
-            font-size: 1.25rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            text-align: center;
-            flex-grow: 1;
+        .icon-btn {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            color: #fff;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.1s;
+        }
+
+        .icon-btn:active {
+            background-color: #333;
         }
 
         /* Hero Layout: Circle Left, Metrics Right */
@@ -107,7 +148,7 @@
             stroke: #34C759;
             stroke-width: 10;
             stroke-linecap: round;
-            stroke-dasharray: 534.07; /* 2 * pi * 85 */
+            stroke-dasharray: 534.07;
             stroke-dashoffset: 534.07;
             transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
         }
@@ -303,7 +344,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             border: 1px solid #222;
         }
 
@@ -317,6 +358,36 @@
         .avg-val {
             font-size: 1.75rem;
             font-weight: 400;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background-color: #1a1a1a;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-val {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #fff;
         }
 
         .export-btn {
@@ -333,85 +404,220 @@
             transition: background-color 0.2s, color 0.2s;
         }
 
-        .export-btn:active {
-            background-color: #222;
-            color: #fff;
+        /* --- CALENDAR VIEW STYLES --- */
+        #calendar-view {
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            flex-grow: 1;
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
         }
+
+        .cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-top: 0.5rem;
+        }
+
+        .cal-month-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .cal-day-label {
+            text-align: center;
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .cal-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+            border: 1px solid #222;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .cal-day:active {
+            transform: scale(0.9);
+        }
+
+        .cal-green {
+            background: rgba(52, 199, 89, 0.15);
+            border-color: #34C759;
+            color: #34C759;
+            font-weight: bold;
+        }
+
+        .cal-red {
+            background: rgba(255, 59, 48, 0.15);
+            border-color: #FF3B30;
+            color: #FF3B30;
+            font-weight: bold;
+        }
+
+        .cal-selected {
+            border: 2px solid #fff;
+        }
+
+        .return-btn {
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 1.25rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: auto;
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="date-header">
-        <button class="date-btn" onclick="changeDate(-1)">&#8592;</button>
-        <div class="date-display" id="date-label">Today</div>
-        <button class="date-btn" onclick="changeDate(1)">&#8594;</button>
+    <div id="main-view">
+        <div class="top-bar">
+            <div style="width: 44px;"></div> 
+            
+            <div class="date-controls">
+                <button class="date-btn" onclick="changeDate(-1)">&#8592;</button>
+                <div class="date-display-wrapper">
+                    <div class="date-display" id="date-label">Today</div>
+                </div>
+                <button class="date-btn" onclick="changeDate(1)">&#8594;</button>
+            </div>
+
+            <button class="icon-btn" onclick="toggleCalendar()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="hero-container">
+            <div class="display-container">
+                <svg class="progress-ring" width="190" height="190">
+                    <circle class="ring-bg" cx="95" cy="95" r="85"></circle>
+                    <circle class="ring-progress" id="progress-circle" cx="95" cy="95" r="85"></circle>
+                </svg>
+                <div class="circle-content">
+                    <div class="count" id="calorie-display">0</div>
+                    <div class="target-btn" onclick="setTarget()">Goal: <span id="target-display">2500</span></div>
+                </div>
+            </div>
+
+            <div class="side-metrics">
+                <div class="metric-box">
+                    <div class="metric-title">Gym</div>
+                    <div class="metric-value" id="display-gym">--</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Weight</div>
+                    <div class="metric-value" id="display-weight">--</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Steps</div>
+                    <div class="metric-value" id="display-steps">--</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-grid">
+            <button class="btn" onclick="adjustCalories(100)">+100</button>
+            <button class="btn" onclick="adjustCalories(200)">+200</button>
+            <button class="btn" onclick="adjustCalories(300)">+300</button>
+            <button class="btn" onclick="adjustCalories(500)">+500</button>
+            <button class="btn" onclick="adjustCalories(1000)">+1000</button>
+            <button class="btn btn-minus" onclick="adjustCalories(-100)">-100</button>
+        </div>
+
+        <div class="extras-container">
+            <div class="extra-row">
+                <span class="extra-label">Gym Session?</span>
+                <div class="toggle-group">
+                    <button class="toggle-btn" id="btn-gym-yes" onclick="setGym(true)">Yes</button>
+                    <button class="toggle-btn" id="btn-gym-no" onclick="setGym(false)">No</button>
+                </div>
+            </div>
+            <div class="extra-row">
+                <span class="extra-label">Weight (kg)</span>
+                <input type="number" step="0.1" class="extra-input" id="input-weight" oninput="setWeight(this.value)" placeholder="0.0">
+            </div>
+            <div class="extra-row">
+                <span class="extra-label">Steps</span>
+                <input type="number" class="extra-input" id="input-steps" oninput="setSteps(this.value)" placeholder="0">
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="average-box">
+                <div class="avg-label">7-Day Calorie Avg</div>
+                <div class="avg-val" id="avg-display">0</div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">7-Day Steps Avg</div>
+                    <div class="stat-val" id="stat-steps-avg">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">7-Day Steps Total</div>
+                    <div class="stat-val" id="stat-steps-total">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">14-Day Weight Avg</div>
+                    <div class="stat-val" id="stat-weight-avg">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">7-Day Gym Total</div>
+                    <div class="stat-val" id="stat-gym-total">0</div>
+                </div>
+            </div>
+
+            <button class="export-btn" onclick="exportCSV()">Export Data (CSV)</button>
+        </div>
     </div>
 
-    <div class="hero-container">
-        <div class="display-container">
-            <svg class="progress-ring" width="190" height="190">
-                <circle class="ring-bg" cx="95" cy="95" r="85"></circle>
-                <circle class="ring-progress" id="progress-circle" cx="95" cy="95" r="85"></circle>
-            </svg>
-            <div class="circle-content">
-                <div class="count" id="calorie-display">0</div>
-                <div class="target-btn" onclick="setTarget()">Goal: <span id="target-display">2500</span></div>
-            </div>
+    <div id="calendar-view" class="hidden">
+        <div class="cal-header">
+            <button class="icon-btn" onclick="changeCalMonth(-1)">&#8592;</button>
+            <div class="cal-month-title" id="cal-month-year">Month</div>
+            <button class="icon-btn" onclick="changeCalMonth(1)">&#8594;</button>
         </div>
+        
+        <div class="cal-grid" id="cal-grid">
+            </div>
 
-        <div class="side-metrics">
-            <div class="metric-box">
-                <div class="metric-title">Gym</div>
-                <div class="metric-value" id="display-gym">--</div>
-            </div>
-            <div class="metric-box">
-                <div class="metric-title">Weight</div>
-                <div class="metric-value" id="display-weight">--</div>
-            </div>
-            <div class="metric-box">
-                <div class="metric-title">Steps</div>
-                <div class="metric-value" id="display-steps">--</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="button-grid">
-        <button class="btn" onclick="adjustCalories(100)">+100</button>
-        <button class="btn" onclick="adjustCalories(200)">+200</button>
-        <button class="btn" onclick="adjustCalories(300)">+300</button>
-        <button class="btn" onclick="adjustCalories(500)">+500</button>
-        <button class="btn" onclick="adjustCalories(1000)">+1000</button>
-        <button class="btn btn-minus" onclick="adjustCalories(-100)">-100</button>
-    </div>
-
-    <div class="extras-container">
-        <div class="extra-row">
-            <span class="extra-label">Gym Session?</span>
-            <div class="toggle-group">
-                <button class="toggle-btn" id="btn-gym-yes" onclick="setGym(true)">Yes</button>
-                <button class="toggle-btn" id="btn-gym-no" onclick="setGym(false)">No</button>
-            </div>
-        </div>
-        <div class="extra-row">
-            <span class="extra-label">Weight (kg)</span>
-            <input type="number" step="0.1" class="extra-input" id="input-weight" oninput="setWeight(this.value)" placeholder="0.0">
-        </div>
-        <div class="extra-row">
-            <span class="extra-label">Steps</span>
-            <input type="number" class="extra-input" id="input-steps" oninput="setSteps(this.value)" placeholder="0">
-        </div>
-    </div>
-
-    <div class="stats-container">
-        <div class="average-box">
-            <div class="avg-label">7-Day Cal Average</div>
-            <div class="avg-val" id="avg-display">0</div>
-        </div>
-        <button class="export-btn" onclick="exportCSV()">Export Data (CSV)</button>
+        <button class="return-btn" onclick="jumpToToday()">Return to Today</button>
     </div>
 
     <script>
-        // --- 1. DATA MIGRATION & SETUP ---
+        // --- 1. DATA SETUP ---
         let rawHistory = JSON.parse(localStorage.getItem('calorieHistory')) || {};
         let history = {};
         for (let date in rawHistory) {
@@ -423,7 +629,7 @@
         }
         
         let dailyTarget = parseInt(localStorage.getItem('dailyTarget')) || 2500;
-        const CIRCUMFERENCE = 534.07; // 2 * pi * 85
+        const CIRCUMFERENCE = 534.07; 
 
         function getRealTodayStr() {
             const now = new Date();
@@ -432,26 +638,52 @@
 
         let realToday = getRealTodayStr();
         let viewDateStr = realToday;
+        let calViewDate = new Date();
 
-        // UI Element Selectors
+        // UI Selectors
+        const mainView = document.getElementById('main-view');
+        const calView = document.getElementById('calendar-view');
         const display = document.getElementById('calorie-display');
         const targetDisplay = document.getElementById('target-display');
         const dateLabel = document.getElementById('date-label');
         const avgDisplay = document.getElementById('avg-display');
         const progressCircle = document.getElementById('progress-circle');
         
-        // Display Selectors
         const dispGym = document.getElementById('display-gym');
         const dispWeight = document.getElementById('display-weight');
         const dispSteps = document.getElementById('display-steps');
 
-        // Input Selectors
         const btnGymYes = document.getElementById('btn-gym-yes');
         const btnGymNo = document.getElementById('btn-gym-no');
         const inWeight = document.getElementById('input-weight');
         const inSteps = document.getElementById('input-steps');
 
-        // --- 2. UTILITY FUNCTIONS ---
+        // New Stat Selectors
+        const statStepsAvg = document.getElementById('stat-steps-avg');
+        const statStepsTotal = document.getElementById('stat-steps-total');
+        const statWeightAvg = document.getElementById('stat-weight-avg');
+        const statGymTotal = document.getElementById('stat-gym-total');
+
+        // --- 2. SWIPE GESTURES ---
+        let touchstartX = 0;
+        let touchendX = 0;
+
+        mainView.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        mainView.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const swipeThreshold = 50; 
+            if (touchendX < touchstartX - swipeThreshold) changeDate(1);
+            if (touchendX > touchstartX + swipeThreshold) changeDate(-1);
+        }
+
+        // --- 3. UTILITY FUNCTIONS ---
         function addDaysStr(dateStr, days) {
             const [y, m, d] = dateStr.split('-');
             const date = new Date(y, m - 1, d);
@@ -478,7 +710,7 @@
             localStorage.setItem('calorieHistory', JSON.stringify(history));
         }
 
-        // --- 3. INPUT HANDLERS ---
+        // --- 4. INPUT HANDLERS ---
         function changeDate(direction) {
             viewDateStr = addDaysStr(viewDateStr, direction);
             updateUI();
@@ -512,8 +744,9 @@
         function setWeight(val) {
             ensureDayExists(viewDateStr);
             history[viewDateStr].weight = val ? parseFloat(val).toFixed(1) : null;
-            saveState(); // Save silently so we don't lose focus on the input box
-            updateTopMetrics(); // Update visual instantly
+            saveState(); 
+            updateTopMetrics(); 
+            calculateRollingStats(); // Recalculate averages instantly
         }
 
         function setSteps(val) {
@@ -521,28 +754,146 @@
             history[viewDateStr].steps = val ? parseInt(val) : null;
             saveState(); 
             updateTopMetrics(); 
+            calculateRollingStats(); // Recalculate averages instantly
         }
 
-        // --- 4. RENDER UI ---
+        // --- 5. CALENDAR LOGIC ---
+        function toggleCalendar() {
+            if (calView.classList.contains('hidden')) {
+                mainView.classList.add('hidden');
+                calView.classList.remove('hidden');
+                const [y, m, d] = viewDateStr.split('-');
+                calViewDate = new Date(y, m - 1, 1);
+                renderCalendar();
+            } else {
+                calView.classList.add('hidden');
+                mainView.classList.remove('hidden');
+            }
+        }
+
+        function changeCalMonth(direction) {
+            calViewDate.setMonth(calViewDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        function jumpToToday() {
+            viewDateStr = realToday;
+            toggleCalendar();
+            updateUI();
+        }
+
+        function renderCalendar() {
+            const year = calViewDate.getFullYear();
+            const month = calViewDate.getMonth();
+            
+            document.getElementById('cal-month-year').textContent = calViewDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+            const firstDay = new Date(year, month, 1).getDay(); 
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const grid = document.getElementById('cal-grid');
+            grid.innerHTML = '';
+
+            ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+                const el = document.createElement('div');
+                el.className = 'cal-day-label';
+                el.textContent = day;
+                grid.appendChild(el);
+            });
+
+            for (let i = 0; i < firstDay; i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const el = document.createElement('div');
+                el.className = 'cal-day';
+                el.textContent = i;
+
+                if (history[dStr] && history[dStr].calories > 0) {
+                    if (history[dStr].calories > dailyTarget) {
+                        el.classList.add('cal-red');
+                    } else {
+                        el.classList.add('cal-green');
+                    }
+                }
+
+                if (dStr === viewDateStr) {
+                    el.classList.add('cal-selected');
+                }
+
+                el.onclick = () => {
+                    viewDateStr = dStr;
+                    toggleCalendar();
+                    updateUI();
+                };
+
+                grid.appendChild(el);
+            }
+        }
+
+        // --- 6. RENDER MAIN UI & STATS ---
+        function calculateRollingStats() {
+            let calSum = 0, calCount = 0;
+            let stepSum = 0, stepCount = 0, stepTotal = 0;
+            let gymTotal = 0;
+            let weightSum = 0, weightCount = 0;
+
+            // Loop backwards 14 days starting from the currently viewed date
+            for (let i = 0; i < 14; i++) {
+                let checkDate = addDaysStr(viewDateStr, -i);
+                let dayData = history[checkDate];
+
+                if (dayData) {
+                    // 14-Day Weight check
+                    if (dayData.weight) {
+                        weightSum += parseFloat(dayData.weight);
+                        weightCount++;
+                    }
+
+                    // 7-Day checks (only process if within the last 7 loops)
+                    if (i < 7) {
+                        if (dayData.calories > 0 || checkDate === realToday) {
+                            calSum += dayData.calories;
+                            calCount++;
+                        }
+                        if (dayData.steps > 0) {
+                            stepSum += parseInt(dayData.steps);
+                            stepCount++;
+                            stepTotal += parseInt(dayData.steps);
+                        }
+                        if (dayData.gym === true) {
+                            gymTotal++;
+                        }
+                    }
+                }
+            }
+
+            // Apply calculated numbers to the display boxes
+            avgDisplay.textContent = calCount === 0 ? 0 : Math.round(calSum / calCount).toLocaleString();
+            statStepsAvg.textContent = stepCount === 0 ? 0 : Math.round(stepSum / stepCount).toLocaleString();
+            statStepsTotal.textContent = stepTotal.toLocaleString();
+            statWeightAvg.textContent = weightCount === 0 ? "--" : (weightSum / weightCount).toFixed(1) + " kg";
+            statGymTotal.textContent = gymTotal;
+        }
+
         function updateTopMetrics() {
             ensureDayExists(viewDateStr);
             const dayData = history[viewDateStr];
 
-            // Render Gym Top
             if (dayData.gym === true) {
                 dispGym.innerHTML = `<span class="val-green">Yes</span>`;
             } else {
                 dispGym.innerHTML = `<span class="val-red">No</span>`;
             }
 
-            // Render Weight Top
             if (dayData.weight) {
                 dispWeight.innerHTML = `<span class="val-neutral">${dayData.weight} kg</span>`;
             } else {
                 dispWeight.innerHTML = `<span class="val-neutral">--</span>`;
             }
 
-            // Render Steps Top
             if (dayData.steps) {
                 dispSteps.innerHTML = `<span class="val-neutral">${parseInt(dayData.steps).toLocaleString()}</span>`;
             } else {
@@ -555,16 +906,13 @@
             const dayData = history[viewDateStr];
             const currentCals = dayData.calories;
 
-            // Update Text
             dateLabel.textContent = formatDisplayDate(viewDateStr);
             display.textContent = currentCals;
             targetDisplay.textContent = dailyTarget;
 
-            // Sync Input Fields to the current viewDate
             inWeight.value = dayData.weight || '';
             inSteps.value = dayData.steps || '';
             
-            // Sync Gym Buttons
             if (dayData.gym === true) {
                 btnGymYes.classList.add('active-yes');
                 btnGymNo.classList.remove('active-no');
@@ -573,11 +921,9 @@
                 btnGymNo.classList.add('active-no');
             }
 
-            // Update Top Section Metrics
             updateTopMetrics();
             saveState();
 
-            // Update Circle Ring
             const percentage = Math.min(currentCals / dailyTarget, 1);
             const offset = CIRCUMFERENCE - (percentage * CIRCUMFERENCE);
             progressCircle.style.strokeDashoffset = offset;
@@ -588,20 +934,10 @@
                 progressCircle.classList.remove('over-target');
             }
 
-            // Update 7-Day Average
-            const dates = Object.keys(history).sort().reverse();
-            let sum = 0; let count = 0;
-            for (let i = 0; i < Math.min(7, dates.length); i++) {
-                let c = history[dates[i]].calories || 0;
-                if (c > 0 || dates[i] === realToday) {
-                    sum += c;
-                    count++;
-                }
-            }
-            avgDisplay.textContent = count === 0 ? 0 : Math.round(sum / count).toLocaleString();
+            // Calculate all the averages and totals dynamically based on the current viewDate
+            calculateRollingStats();
         }
 
-        // --- 5. EXPORT CSV ---
         function exportCSV() {
             if (Object.keys(history).length === 0) {
                 alert("No data to export yet!");
@@ -633,7 +969,6 @@
             document.body.removeChild(link);
         }
 
-        // --- 6. EVENT LISTENERS ---
         document.addEventListener("visibilitychange", function() {
             if (document.visibilityState === 'visible') {
                 const checkToday = getRealTodayStr();
@@ -645,7 +980,6 @@
             }
         });
 
-        // Init
         updateUI();
     </script>
 </body>
