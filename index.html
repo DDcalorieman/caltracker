@@ -37,7 +37,23 @@
             flex-grow: 1;
         }
 
-        /* Date Header */
+        .logo-container {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto 1rem auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-logo {
+            width: 100%;
+            max-width: 250px;
+            aspect-ratio: 3 / 1;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 12px;
+        }
+
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -106,7 +122,7 @@
             background-color: #333;
         }
 
-        /* Hero Layout: Circle Left, Metrics Right */
+        /* Hero Layout */
         .hero-container {
             display: grid;
             grid-template-columns: auto 1fr;
@@ -117,7 +133,6 @@
             align-items: center;
         }
 
-        /* Left: Circular Progress */
         .display-container {
             position: relative;
             display: flex;
@@ -187,12 +202,6 @@
             transition: border-color 0.2s, color 0.2s;
         }
 
-        .target-btn:active {
-            border-color: #555;
-            color: #fff;
-        }
-
-        /* Right: Side Metrics */
         .side-metrics {
             display: flex;
             flex-direction: column;
@@ -223,7 +232,7 @@
         .val-green { color: #34C759; }
         .val-neutral { color: #ffffff; }
 
-        /* Number Buttons Grid */
+        /* Buttons & Inputs */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -257,7 +266,6 @@
             border-color: #442222;
         }
 
-        /* Extras Section (Inputs) */
         .extras-container {
             max-width: 450px;
             width: 100%;
@@ -293,15 +301,9 @@
             font-size: 1rem;
         }
         
-        .extra-input:focus {
-            outline: none;
-            border-color: #555;
-        }
+        .extra-input:focus { outline: none; border-color: #555; }
 
-        .toggle-group {
-            display: flex;
-            gap: 0.5rem;
-        }
+        .toggle-group { display: flex; gap: 0.5rem; }
 
         .toggle-btn {
             background: #1a1a1a;
@@ -315,19 +317,10 @@
             transition: all 0.2s;
         }
 
-        .toggle-btn.active-yes {
-            background: #233526;
-            border-color: #34C759;
-            color: #34C759;
-        }
+        .toggle-btn.active-yes { background: #233526; border-color: #34C759; color: #34C759; }
+        .toggle-btn.active-no { background: #3a1c1c; border-color: #FF3B30; color: #FF3B30; }
 
-        .toggle-btn.active-no {
-            background: #3a1c1c;
-            border-color: #FF3B30;
-            color: #FF3B30;
-        }
-
-        /* Stats & Export Section */
+        /* Stats */
         .stats-container {
             max-width: 450px;
             margin: 0 auto;
@@ -348,17 +341,17 @@
             border: 1px solid #222;
         }
 
-        .avg-label {
+        .avg-label, .stat-label {
             color: #888;
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .avg-val {
-            font-size: 1.75rem;
-            font-weight: 400;
-        }
+        .stat-label { font-size: 0.7rem; margin-bottom: 0.4rem; }
+
+        .avg-val { font-size: 1.75rem; font-weight: 400; }
+        .stat-val { font-size: 1.3rem; font-weight: 500; color: #fff; }
 
         .stats-grid {
             display: grid;
@@ -376,21 +369,7 @@
             flex-direction: column;
         }
 
-        .stat-label {
-            color: #888;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.4rem;
-        }
-
-        .stat-val {
-            font-size: 1.3rem;
-            font-weight: 500;
-            color: #fff;
-        }
-
-        .export-btn {
+        .export-btn, .return-btn {
             width: 100%;
             background: transparent;
             border: 1px solid #333;
@@ -402,6 +381,16 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: background-color 0.2s, color 0.2s;
+        }
+
+        .return-btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 1.25rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 2rem;
         }
 
         /* --- CALENDAR VIEW STYLES --- */
@@ -423,10 +412,7 @@
             padding-top: 0.5rem;
         }
 
-        .cal-month-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
+        .cal-month-title { font-size: 1.5rem; font-weight: 600; }
 
         .cal-grid {
             display: grid;
@@ -453,53 +439,196 @@
             border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
-            transition: transform 0.1s;
         }
 
-        .cal-day:active {
-            transform: scale(0.9);
-        }
+        .cal-green { background: rgba(52, 199, 89, 0.15); border-color: #34C759; color: #34C759; font-weight: bold; }
+        .cal-red { background: rgba(255, 59, 48, 0.15); border-color: #FF3B30; color: #FF3B30; font-weight: bold; }
+        .cal-selected { border: 2px solid #fff; }
 
-        .cal-green {
-            background: rgba(52, 199, 89, 0.15);
-            border-color: #34C759;
-            color: #34C759;
-            font-weight: bold;
-        }
-
-        .cal-red {
-            background: rgba(255, 59, 48, 0.15);
-            border-color: #FF3B30;
-            color: #FF3B30;
-            font-weight: bold;
-        }
-
-        .cal-selected {
-            border: 2px solid #fff;
-        }
-
-        .return-btn {
+        /* --- TIMER VIEW STYLES --- */
+        #timer-view {
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            flex-grow: 1;
+            max-width: 450px;
             width: 100%;
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 1.25rem;
-            border-radius: 16px;
-            font-size: 1.1rem;
+            margin: 0 auto;
+        }
+
+        .timer-header {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 2rem;
+            padding-top: 0.5rem;
+        }
+
+        .timer-display-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .timer-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+            pointer-events: none;
+        }
+
+        .timer-ring-bg {
+            fill: none;
+            stroke: #222;
+            stroke-width: 8;
+        }
+
+        .timer-ring-progress {
+            fill: none;
+            stroke: #444; /* Default idle color */
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 628.32; /* 2 * pi * 100 */
+            stroke-dashoffset: 0;
+            /* 1s linear transition ensures smooth ticking rather than snapping */
+            transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+        }
+
+        .timer-ring-progress.ring-work { stroke: #34C759; } /* Green */
+        .timer-ring-progress.ring-rest { stroke: #0A84FF; } /* Blue */
+
+        .timer-circle-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .timer-status {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        
+        .status-idle { color: #888; }
+        .status-work { color: #34C759; }
+        .status-rest { color: #0A84FF; }
+
+        .timer-time {
+            font-size: 4.5rem;
+            font-weight: 300;
+            letter-spacing: -2px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-sets-count {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-top: 0.75rem;
+        }
+
+        .slider-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .slider-val {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        
+        input[type=range]:focus { outline: none; }
+        
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #333;
+            border-radius: 4px;
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -9px;
+            border: 2px solid #121212;
+        }
+
+        .timer-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .timer-btn {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #333;
+            border-radius: 14px;
+            padding: 1.25rem 0;
+            font-size: 1.1rem;
+            font-weight: 500;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: auto;
+            transition: background-color 0.1s;
         }
+
+        .timer-btn:active { background-color: #333; }
+        .btn-start { background-color: #1a3320; border-color: #2e5c38; color: #4cd964; }
+        .btn-start:active { background-color: #122416; }
 
     </style>
 </head>
 <body>
 
     <div id="main-view">
+        <div class="logo-container">
+            <img src="icon.png" alt="App Logo" class="app-logo">
+        </div>
+
         <div class="top-bar">
-            <div style="width: 44px;"></div> 
+            <button class="icon-btn" onclick="toggleTimer()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="13" r="8"></circle>
+                    <polyline points="12 9 12 13 14 15"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="4"></line>
+                    <line x1="10" y1="2" x2="14" y2="2"></line>
+                </svg>
+            </button>
             
             <div class="date-controls">
                 <button class="date-btn" onclick="changeDate(-1)">&#8592;</button>
@@ -610,8 +739,53 @@
             <button class="icon-btn" onclick="changeCalMonth(1)">&#8594;</button>
         </div>
         
-        <div class="cal-grid" id="cal-grid">
+        <div class="cal-grid" id="cal-grid"></div>
+        <button class="return-btn" onclick="jumpToToday()">Return to Today</button>
+    </div>
+
+    <div id="timer-view" class="hidden">
+        <div class="timer-header">Workout Timer</div>
+
+        <div class="timer-display-area">
+            <svg class="timer-ring" width="220" height="220">
+                <circle class="timer-ring-bg" cx="110" cy="110" r="100"></circle>
+                <circle class="timer-ring-progress" id="timer-progress-circle" cx="110" cy="110" r="100"></circle>
+            </svg>
+            <div class="timer-circle-content">
+                <div class="timer-status status-idle" id="timer-status-text">IDLE</div>
+                <div class="timer-time" id="timer-time-display">00:00</div>
+                <div class="timer-sets-count" id="timer-set-counter">Set 0 of 0</div>
             </div>
+        </div>
+
+        <div class="slider-group">
+            <div class="slider-header">
+                <span>Sets</span>
+                <span class="slider-val" id="val-sets">3</span>
+            </div>
+            <input type="range" id="slider-sets" min="1" max="10" step="1" value="3" oninput="updateTimerSettings()">
+        </div>
+
+        <div class="slider-group">
+            <div class="slider-header">
+                <span>Work Period</span>
+                <span class="slider-val" id="val-work">01:00</span>
+            </div>
+            <input type="range" id="slider-work" min="30" max="600" step="30" value="60" oninput="updateTimerSettings()">
+        </div>
+
+        <div class="slider-group">
+            <div class="slider-header">
+                <span>Rest Period</span>
+                <span class="slider-val" id="val-rest">00:30</span>
+            </div>
+            <input type="range" id="slider-rest" min="0" max="120" step="10" value="30" oninput="updateTimerSettings()">
+        </div>
+
+        <div class="timer-controls">
+            <button class="timer-btn" onclick="resetTimer()">Reset</button>
+            <button class="timer-btn btn-start" id="btn-timer-action" onclick="toggleTimerAction()">Start</button>
+        </div>
 
         <button class="return-btn" onclick="jumpToToday()">Return to Today</button>
     </div>
@@ -643,6 +817,8 @@
         // UI Selectors
         const mainView = document.getElementById('main-view');
         const calView = document.getElementById('calendar-view');
+        const timerView = document.getElementById('timer-view');
+        
         const display = document.getElementById('calorie-display');
         const targetDisplay = document.getElementById('target-display');
         const dateLabel = document.getElementById('date-label');
@@ -658,7 +834,6 @@
         const inWeight = document.getElementById('input-weight');
         const inSteps = document.getElementById('input-steps');
 
-        // New Stat Selectors
         const statStepsAvg = document.getElementById('stat-steps-avg');
         const statStepsTotal = document.getElementById('stat-steps-total');
         const statWeightAvg = document.getElementById('stat-weight-avg');
@@ -668,14 +843,8 @@
         let touchstartX = 0;
         let touchendX = 0;
 
-        mainView.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, {passive: true});
-
-        mainView.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, {passive: true});
+        mainView.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
+        mainView.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX; handleSwipe(); }, {passive: true});
 
         function handleSwipe() {
             const swipeThreshold = 50; 
@@ -700,6 +869,12 @@
             return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
         }
 
+        function formatTimeSec(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
         function ensureDayExists(dateStr) {
             if (typeof history[dateStr] === 'undefined') {
                 history[dateStr] = { calories: 0, weight: null, gym: false, steps: null };
@@ -710,7 +885,7 @@
             localStorage.setItem('calorieHistory', JSON.stringify(history));
         }
 
-        // --- 4. INPUT HANDLERS ---
+        // --- 4. DATA INPUT HANDLERS ---
         function changeDate(direction) {
             viewDateStr = addDaysStr(viewDateStr, direction);
             updateUI();
@@ -746,7 +921,7 @@
             history[viewDateStr].weight = val ? parseFloat(val).toFixed(1) : null;
             saveState(); 
             updateTopMetrics(); 
-            calculateRollingStats(); // Recalculate averages instantly
+            calculateRollingStats(); 
         }
 
         function setSteps(val) {
@@ -754,32 +929,173 @@
             history[viewDateStr].steps = val ? parseInt(val) : null;
             saveState(); 
             updateTopMetrics(); 
-            calculateRollingStats(); // Recalculate averages instantly
+            calculateRollingStats(); 
         }
 
-        // --- 5. CALENDAR LOGIC ---
+        // --- NAVIGATION CONTROLS ---
         function toggleCalendar() {
-            if (calView.classList.contains('hidden')) {
-                mainView.classList.add('hidden');
-                calView.classList.remove('hidden');
-                const [y, m, d] = viewDateStr.split('-');
-                calViewDate = new Date(y, m - 1, 1);
-                renderCalendar();
-            } else {
-                calView.classList.add('hidden');
-                mainView.classList.remove('hidden');
-            }
+            mainView.classList.add('hidden');
+            timerView.classList.add('hidden');
+            calView.classList.remove('hidden');
+            const [y, m, d] = viewDateStr.split('-');
+            calViewDate = new Date(y, m - 1, 1);
+            renderCalendar();
         }
 
-        function changeCalMonth(direction) {
-            calViewDate.setMonth(calViewDate.getMonth() + direction);
-            renderCalendar();
+        function toggleTimer() {
+            mainView.classList.add('hidden');
+            calView.classList.add('hidden');
+            timerView.classList.remove('hidden');
+            updateTimerSettings(); 
         }
 
         function jumpToToday() {
             viewDateStr = realToday;
-            toggleCalendar();
+            calView.classList.add('hidden');
+            timerView.classList.add('hidden');
+            mainView.classList.remove('hidden');
             updateUI();
+        }
+
+        // --- 5. TIMER ENGINE ---
+        let timerInterval;
+        let isTimerRunning = false;
+        let timerPhase = 'idle'; // 'idle', 'work', 'rest', 'done'
+        let currentSet = 1;
+        let timeRemaining = 0;
+        let totalPhaseTime = 0; // Needed to calculate the ring circle drain percentage
+
+        const sliderSets = document.getElementById('slider-sets');
+        const sliderWork = document.getElementById('slider-work');
+        const sliderRest = document.getElementById('slider-rest');
+        const valSets = document.getElementById('val-sets');
+        const valWork = document.getElementById('val-work');
+        const valRest = document.getElementById('val-rest');
+        
+        const timerStatusText = document.getElementById('timer-status-text');
+        const timerTimeDisplay = document.getElementById('timer-time-display');
+        const timerSetCounter = document.getElementById('timer-set-counter');
+        const timerProgressCircle = document.getElementById('timer-progress-circle');
+        const btnTimerAction = document.getElementById('btn-timer-action');
+
+        const TIMER_CIRCUMFERENCE = 628.32; // 2 * pi * 100
+
+        function updateTimerSettings() {
+            valSets.textContent = sliderSets.value;
+            valWork.textContent = formatTimeSec(sliderWork.value);
+            valRest.textContent = formatTimeSec(sliderRest.value);
+            
+            if (!isTimerRunning && timerPhase === 'idle') {
+                timerTimeDisplay.textContent = formatTimeSec(sliderWork.value);
+                timerSetCounter.textContent = `Set 1 of ${sliderSets.value}`;
+                timerProgressCircle.style.strokeDashoffset = 0; // Full ring
+            }
+        }
+
+        function toggleTimerAction() {
+            if (timerPhase === 'done') resetTimer();
+
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                btnTimerAction.textContent = "Resume";
+            } else {
+                if (timerPhase === 'idle') {
+                    timerPhase = 'work';
+                    timeRemaining = parseInt(sliderWork.value);
+                    totalPhaseTime = timeRemaining;
+                    currentSet = 1;
+                }
+                isTimerRunning = true;
+                btnTimerAction.textContent = "Pause";
+                updateTimerVisuals();
+                timerInterval = setInterval(timerTick, 1000);
+            }
+        }
+
+        function timerTick() {
+            timeRemaining--;
+
+            if (timeRemaining < 0) {
+                if (timerPhase === 'work') {
+                    if (currentSet >= parseInt(sliderSets.value)) {
+                        // Finished entirely
+                        timerPhase = 'done';
+                        isTimerRunning = false;
+                        clearInterval(timerInterval);
+                        btnTimerAction.textContent = "Start";
+                        timerStatusText.textContent = "COMPLETE!";
+                        timerStatusText.className = "timer-status status-work";
+                        timerTimeDisplay.textContent = "00:00";
+                        timerProgressCircle.style.strokeDashoffset = 0;
+                        timerProgressCircle.classList.remove('ring-rest');
+                        timerProgressCircle.classList.add('ring-work');
+                        return;
+                    } else if (parseInt(sliderRest.value) > 0) {
+                        // Move to Rest phase
+                        timerPhase = 'rest';
+                        timeRemaining = parseInt(sliderRest.value);
+                        totalPhaseTime = timeRemaining;
+                    } else {
+                        // Skip rest if it was set to 0s
+                        currentSet++;
+                        timeRemaining = parseInt(sliderWork.value);
+                        totalPhaseTime = timeRemaining;
+                    }
+                } else if (timerPhase === 'rest') {
+                    // Move to Work phase
+                    timerPhase = 'work';
+                    currentSet++;
+                    timeRemaining = parseInt(sliderWork.value);
+                    totalPhaseTime = timeRemaining;
+                }
+            }
+            updateTimerVisuals();
+        }
+
+        function updateTimerVisuals() {
+            timerTimeDisplay.textContent = formatTimeSec(timeRemaining);
+            timerSetCounter.textContent = `Set ${currentSet} of ${sliderSets.value}`;
+
+            // Calculate how much the ring has drained
+            let percentage = totalPhaseTime > 0 ? (timeRemaining / totalPhaseTime) : 0;
+            let offset = TIMER_CIRCUMFERENCE - (percentage * TIMER_CIRCUMFERENCE);
+            timerProgressCircle.style.strokeDashoffset = offset;
+
+            // Handle Ring & Text Colors
+            timerProgressCircle.classList.remove('ring-work', 'ring-rest');
+            
+            if (timerPhase === 'work') {
+                timerStatusText.textContent = "WORK";
+                timerStatusText.className = "timer-status status-work";
+                timerProgressCircle.classList.add('ring-work');
+            } else if (timerPhase === 'rest') {
+                timerStatusText.textContent = "REST";
+                timerStatusText.className = "timer-status status-rest";
+                timerProgressCircle.classList.add('ring-rest');
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timerPhase = 'idle';
+            currentSet = 1;
+            btnTimerAction.textContent = "Start";
+            timerStatusText.textContent = "IDLE";
+            timerStatusText.className = "timer-status status-idle";
+            
+            // Reset Ring
+            timerProgressCircle.classList.remove('ring-work', 'ring-rest');
+            timerProgressCircle.style.strokeDashoffset = 0;
+            
+            updateTimerSettings();
+        }
+
+        // --- 6. CALENDAR LOGIC ---
+        function changeCalMonth(direction) {
+            calViewDate.setMonth(calViewDate.getMonth() + direction);
+            renderCalendar();
         }
 
         function renderCalendar() {
@@ -801,9 +1117,7 @@
                 grid.appendChild(el);
             });
 
-            for (let i = 0; i < firstDay; i++) {
-                grid.appendChild(document.createElement('div'));
-            }
+            for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
 
             for (let i = 1; i <= daysInMonth; i++) {
                 const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
@@ -812,47 +1126,38 @@
                 el.textContent = i;
 
                 if (history[dStr] && history[dStr].calories > 0) {
-                    if (history[dStr].calories > dailyTarget) {
-                        el.classList.add('cal-red');
-                    } else {
-                        el.classList.add('cal-green');
-                    }
+                    if (history[dStr].calories > dailyTarget) el.classList.add('cal-red');
+                    else el.classList.add('cal-green');
                 }
 
-                if (dStr === viewDateStr) {
-                    el.classList.add('cal-selected');
-                }
+                if (dStr === viewDateStr) el.classList.add('cal-selected');
 
                 el.onclick = () => {
                     viewDateStr = dStr;
-                    toggleCalendar();
-                    updateUI();
+                    jumpToToday();
                 };
 
                 grid.appendChild(el);
             }
         }
 
-        // --- 6. RENDER MAIN UI & STATS ---
+        // --- 7. MAIN UI STATS & RENDER ---
         function calculateRollingStats() {
             let calSum = 0, calCount = 0;
             let stepSum = 0, stepCount = 0, stepTotal = 0;
             let gymTotal = 0;
             let weightSum = 0, weightCount = 0;
 
-            // Loop backwards 14 days starting from the currently viewed date
             for (let i = 0; i < 14; i++) {
                 let checkDate = addDaysStr(viewDateStr, -i);
                 let dayData = history[checkDate];
 
                 if (dayData) {
-                    // 14-Day Weight check
                     if (dayData.weight) {
                         weightSum += parseFloat(dayData.weight);
                         weightCount++;
                     }
 
-                    // 7-Day checks (only process if within the last 7 loops)
                     if (i < 7) {
                         if (dayData.calories > 0 || checkDate === realToday) {
                             calSum += dayData.calories;
@@ -863,14 +1168,11 @@
                             stepCount++;
                             stepTotal += parseInt(dayData.steps);
                         }
-                        if (dayData.gym === true) {
-                            gymTotal++;
-                        }
+                        if (dayData.gym === true) gymTotal++;
                     }
                 }
             }
 
-            // Apply calculated numbers to the display boxes
             avgDisplay.textContent = calCount === 0 ? 0 : Math.round(calSum / calCount).toLocaleString();
             statStepsAvg.textContent = stepCount === 0 ? 0 : Math.round(stepSum / stepCount).toLocaleString();
             statStepsTotal.textContent = stepTotal.toLocaleString();
@@ -882,23 +1184,9 @@
             ensureDayExists(viewDateStr);
             const dayData = history[viewDateStr];
 
-            if (dayData.gym === true) {
-                dispGym.innerHTML = `<span class="val-green">Yes</span>`;
-            } else {
-                dispGym.innerHTML = `<span class="val-red">No</span>`;
-            }
-
-            if (dayData.weight) {
-                dispWeight.innerHTML = `<span class="val-neutral">${dayData.weight} kg</span>`;
-            } else {
-                dispWeight.innerHTML = `<span class="val-neutral">--</span>`;
-            }
-
-            if (dayData.steps) {
-                dispSteps.innerHTML = `<span class="val-neutral">${parseInt(dayData.steps).toLocaleString()}</span>`;
-            } else {
-                dispSteps.innerHTML = `<span class="val-neutral">--</span>`;
-            }
+            dispGym.innerHTML = dayData.gym ? `<span class="val-green">Yes</span>` : `<span class="val-red">No</span>`;
+            dispWeight.innerHTML = dayData.weight ? `<span class="val-neutral">${dayData.weight} kg</span>` : `<span class="val-neutral">--</span>`;
+            dispSteps.innerHTML = dayData.steps ? `<span class="val-neutral">${parseInt(dayData.steps).toLocaleString()}</span>` : `<span class="val-neutral">--</span>`;
         }
 
         function updateUI() {
@@ -928,13 +1216,9 @@
             const offset = CIRCUMFERENCE - (percentage * CIRCUMFERENCE);
             progressCircle.style.strokeDashoffset = offset;
 
-            if (currentCals > dailyTarget) {
-                progressCircle.classList.add('over-target');
-            } else {
-                progressCircle.classList.remove('over-target');
-            }
+            if (currentCals > dailyTarget) progressCircle.classList.add('over-target');
+            else progressCircle.classList.remove('over-target');
 
-            // Calculate all the averages and totals dynamically based on the current viewDate
             calculateRollingStats();
         }
 
@@ -949,18 +1233,12 @@
             
             sortedDates.forEach(date => {
                 let d = history[date];
-                let cals = d.calories || 0;
-                let weight = d.weight || "";
-                let gym = d.gym ? "Yes" : "No";
-                let steps = d.steps || "";
-                csvContent += `${date},${cals},${weight},${gym},${steps}\n`;
+                csvContent += `${date},${d.calories || 0},${d.weight || ""},${d.gym ? "Yes" : "No"},${d.steps || ""}\n`;
             });
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute("href", url);
+            link.setAttribute("href", URL.createObjectURL(blob));
             link.setAttribute("download", `fitness_history_${getRealTodayStr()}.csv`);
             link.style.visibility = 'hidden';
             
@@ -981,6 +1259,7 @@
         });
 
         updateUI();
+        updateTimerSettings();
     </script>
 </body>
 </html>
