@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <title>Calorie Tracker Plus</title>
     
     <link rel="manifest" href="manifest.json">
@@ -22,16 +27,16 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            min-height: 100dvh;
             overflow-x: hidden;
         }
 
         .hidden { display: none !important; }
 
-        /* Shared View Container */
         .app-view {
             display: flex;
             flex-direction: column;
-            padding: 1.5rem;
+            padding: calc(1.5rem + env(safe-area-inset-top)) 1.5rem calc(1.5rem + env(safe-area-inset-bottom)) 1.5rem;
             flex-grow: 1;
             max-width: 450px;
             width: 100%;
@@ -48,7 +53,7 @@
 
         .app-logo {
             width: 100%;
-            max-width: 200px; /* Reduced by 20% */
+            max-width: 160px; 
             aspect-ratio: 3 / 1;
             object-fit: cover;
             object-position: center;
@@ -570,14 +575,15 @@
                     <polyline points="4 17 10 11 14 15 20 9"/>
                 </svg>
             </button>
-            <button class="icon-btn chart-ma-btn" id="btn-ma-toggle" onclick="toggleMA(this)">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button class="icon-btn chart-ma-btn" id="btn-ma-toggle" onclick="toggleMA(this)" style="width: auto; padding: 0 0.75rem; gap: 0.4rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 12c3-4 6-4 9 0 3 4 6 4 9 0"/>
                 </svg>
+                <span style="font-size: 0.85rem; font-weight: 600;">7d MA</span>
             </button>
         </div>
 
-        <canvas id="chart-canvas" width="400" height="300"></canvas>
+        <canvas id="chart-canvas" width="400" height="400"></canvas>
 
         <button class="return-btn" onclick="returnToMainView()">Return</button>
     </div>
@@ -638,7 +644,7 @@
         const statWeightAvg = document.getElementById('stat-weight-avg');
         const statGymTotal = document.getElementById('stat-gym-total');
 
-        // --- 2. VIEW NAVIGATION & ANDROID BACK BUTTON (HISTORY API) ---
+        // --- 2. VIEW NAVIGATION (HISTORY API) ---
         function openSubView(viewId) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
             document.getElementById(viewId).classList.remove('hidden');
@@ -647,9 +653,8 @@
 
         function returnToMainView() {
             if (window.history.state) {
-                window.history.back(); // Triggers popstate
+                window.history.back(); 
             } else {
-                // Fallback if accessed directly
                 document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
                 document.getElementById('main-view').classList.remove('hidden');
                 updateUI();
@@ -657,13 +662,12 @@
         }
 
         window.addEventListener('popstate', () => {
-            // Revert to main view on physical back button
             document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
             document.getElementById('main-view').classList.remove('hidden');
             updateUI(); 
         });
 
-        // --- 3. SWIPE GESTURES (Main View Only) ---
+        // --- 3. SWIPE GESTURES ---
         let touchstartX = 0;
         let touchendX = 0;
         const mainViewEl = document.getElementById('main-view');
@@ -690,6 +694,21 @@
             const [y, m, d] = dateStr.split('-');
             const date = new Date(y, m - 1, d);
             return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+        
+        function getOrdinal(n) {
+            let s = ["th", "st", "nd", "rd"];
+            let v = n % 100;
+            return n + (s[(v - 20) % 10] || s[v] || s[0]);
+        }
+
+        function formatChartDate(dateStr) {
+            const [y, m, d] = dateStr.split('-');
+            const date = new Date(y, m - 1, d);
+            const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
+            const month = date.toLocaleDateString(undefined, { month: 'long' });
+            const dayStr = getOrdinal(parseInt(d));
+            return `${weekday} ${dayStr} ${month}`;
         }
 
         function formatTimeSec(seconds) {
@@ -733,7 +752,7 @@
             updateUI();
         }
 
-        // --- LONG PRESS RESET LOGIC ---
+        // Long Press Reset Logic
         const btnMinus = document.getElementById('btn-minus-100');
         let pressTimer = null;
 
@@ -747,14 +766,11 @@
         btnMinus.addEventListener('touchend', (e) => {
             if (pressTimer) {
                 clearTimeout(pressTimer);
-                e.preventDefault(); // Stop ghost click
+                e.preventDefault(); 
                 adjustCalories(-100);
-            } else {
-                e.preventDefault(); // Modal already up, stop ghost click
-            }
+            } else { e.preventDefault(); }
         }, {passive: false});
 
-        // Mouse fallbacks for testing on PC
         btnMinus.addEventListener('mousedown', () => {
             pressTimer = setTimeout(() => {
                 pressTimer = null;
@@ -770,35 +786,19 @@
 
         function confirmReset(isYes) {
             document.getElementById('reset-modal').classList.add('hidden');
-            if (isYes) {
-                historyObj[viewDateStr].calories = 0;
-                updateUI();
-            }
+            if (isYes) { historyObj[viewDateStr].calories = 0; updateUI(); }
         }
 
-        // Extra data tracking
-        function setGym(status) {
-            ensureDayExists(viewDateStr); historyObj[viewDateStr].gym = status; updateUI();
-        }
-        function setWeight(val) {
-            ensureDayExists(viewDateStr); historyObj[viewDateStr].weight = val ? parseFloat(val).toFixed(1) : null;
-            saveState(); updateTopMetrics(); calculateRollingStats(); 
-        }
-        function setSteps(val) {
-            ensureDayExists(viewDateStr); historyObj[viewDateStr].steps = val ? parseInt(val) : null;
-            saveState(); updateTopMetrics(); calculateRollingStats(); 
-        }
+        function setGym(status) { ensureDayExists(viewDateStr); historyObj[viewDateStr].gym = status; updateUI(); }
+        function setWeight(val) { ensureDayExists(viewDateStr); historyObj[viewDateStr].weight = val ? parseFloat(val).toFixed(1) : null; saveState(); updateTopMetrics(); calculateRollingStats(); }
+        function setSteps(val) { ensureDayExists(viewDateStr); historyObj[viewDateStr].steps = val ? parseInt(val) : null; saveState(); updateTopMetrics(); calculateRollingStats(); }
 
         // --- 6. CALENDAR LOGIC ---
-        function changeCalMonth(direction) {
-            calViewDate.setMonth(calViewDate.getMonth() + direction);
-            renderCalendar();
-        }
+        function changeCalMonth(direction) { calViewDate.setMonth(calViewDate.getMonth() + direction); renderCalendar(); }
 
         function renderCalendar() {
             const year = calViewDate.getFullYear();
             const month = calViewDate.getMonth();
-            
             document.getElementById('cal-month-year').textContent = calViewDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
 
             const firstDay = new Date(year, month, 1).getDay(); 
@@ -814,9 +814,7 @@
 
             for (let i = 1; i <= daysInMonth; i++) {
                 const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                const el = document.createElement('div');
-                el.className = 'cal-day';
-                el.textContent = i;
+                const el = document.createElement('div'); el.className = 'cal-day'; el.textContent = i;
 
                 if (historyObj[dStr] && historyObj[dStr].calories > 0) {
                     if (historyObj[dStr].calories > dailyTarget) el.classList.add('cal-red');
@@ -825,11 +823,7 @@
 
                 if (dStr === viewDateStr) el.classList.add('cal-selected');
 
-                el.onclick = () => {
-                    viewDateStr = dStr;
-                    returnToMainView(); // Safely return and update UI
-                };
-
+                el.onclick = () => { viewDateStr = dStr; returnToMainView(); };
                 grid.appendChild(el);
             }
         }
@@ -953,8 +947,7 @@
 
         function toggleMA(el) {
             showChartMA = !showChartMA;
-            if(showChartMA) el.classList.add('active');
-            else el.classList.remove('active');
+            if(showChartMA) el.classList.add('active'); else el.classList.remove('active');
             drawChart();
         }
 
@@ -964,43 +957,94 @@
             const w = canvas.width; const h = canvas.height;
             ctx.clearRect(0, 0, w, h);
 
-            let data = [];
+            let data = []; let datesArray = [];
             for (let i = currentChartDays - 1; i >= 0; i--) {
                 let dStr = addDaysStr(viewDateStr, -i);
                 let dayData = historyObj[dStr] || {};
                 let val = dayData[currentChartMetric] || 0;
                 if(currentChartMetric === 'gym') val = dayData.gym ? 1 : 0;
-                data.push(parseFloat(val));
+                data.push(parseFloat(val)); datesArray.push(dStr);
             }
 
-            let maxVal = Math.max(...data, 1) * 1.15; // Padding above highest point
-            const padX = 15, padY = 20;
-            const drawW = w - padX * 2; const drawH = h - padY * 2;
+            let maxVal = Math.max(...data, 1) * 1.25; 
+            const padX = 40, padYBottom = 110, padYTop = 20;
+            const drawW = w - padX - 15; const drawH = h - padYTop - padYBottom;
 
-            // Draw Base Chart
+            // Y Axis Data Labels
+            ctx.fillStyle = '#888'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.font = '11px -apple-system, sans-serif';
+            [0, maxVal/2, maxVal].forEach(v => {
+                let y = h - padYBottom - ((v / maxVal) * drawH);
+                ctx.fillText(Math.round(v).toLocaleString(), padX - 8, y);
+                ctx.strokeStyle = '#333'; ctx.beginPath(); ctx.moveTo(padX, y); ctx.lineTo(w - 15, y); ctx.stroke();
+            });
+
+            let stepX = drawW / Math.max(1, data.length - (currentChartType === 'line' ? 1 : 0));
+            let barW = currentChartType === 'bar' ? (drawW / data.length) : 0;
+            
+            let labelStep = 1;
+            if (currentChartDays >= 30) labelStep = 3;
+            if (currentChartDays >= 90) labelStep = 14;
+            if (currentChartDays >= 180) labelStep = 30;
+
             if (currentChartType === 'bar') {
-                let barW = drawW / data.length;
-                ctx.fillStyle = '#444';
                 let gap = data.length <= 30 ? 2 : 0;
                 data.forEach((val, i) => {
+                    let dStr = datesArray[i];
+                    let xCenter = padX + (i * barW) + (barW/2);
                     let barH = (val / maxVal) * drawH;
-                    ctx.fillRect(padX + (i * barW) + (gap/2), h - padY - barH, barW - gap, barH);
+                    
+                    if (currentChartMetric === 'calories') {
+                        ctx.fillStyle = val > dailyTarget ? 'rgba(255, 59, 48, 0.85)' : 'rgba(52, 199, 89, 0.85)';
+                    } else {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                    }
+                    ctx.fillRect(padX + (i * barW) + (gap/2), h - padYBottom - barH, barW - gap, Math.max(barH, 1));
+
+                    // Callout Text Top (Rotated vertically to ensure it always fits thin bars)
+                    if (val > 0 && currentChartDays <= 30) {
+                        ctx.save();
+                        ctx.translate(xCenter, h - padYBottom - barH - 6);
+                        ctx.rotate(-Math.PI / 2);
+                        ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = '10px -apple-system, sans-serif';
+                        ctx.fillText(currentChartMetric === 'gym' ? 'Yes' : val.toLocaleString(), 0, 0);
+                        ctx.restore();
+                    }
+
+                    // X Axis Data Label
+                    if (i % labelStep === 0) {
+                        ctx.save();
+                        ctx.translate(xCenter, h - padYBottom + 12);
+                        ctx.rotate(-Math.PI / 4);
+                        ctx.fillStyle = '#888'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.font = '10px -apple-system, sans-serif';
+                        ctx.fillText(formatChartDate(dStr), 0, 0);
+                        ctx.restore();
+                    }
                 });
             } else {
-                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.beginPath();
-                let stepX = drawW / Math.max(1, data.length - 1);
                 data.forEach((val, i) => {
-                    let x = padX + i * stepX; let y = h - padY - ((val / maxVal) * drawH);
+                    let xCenter = padX + i * stepX;
+                    if (i % labelStep === 0) {
+                        ctx.save();
+                        ctx.translate(xCenter, h - padYBottom + 12);
+                        ctx.rotate(-Math.PI / 4);
+                        ctx.fillStyle = '#888'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.font = '10px -apple-system, sans-serif';
+                        ctx.fillText(formatChartDate(datesArray[i]), 0, 0);
+                        ctx.restore();
+                    }
+                });
+
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.beginPath();
+                data.forEach((val, i) => {
+                    let x = padX + i * stepX; let y = h - padYBottom - ((val / maxVal) * drawH);
                     if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
                 });
                 ctx.stroke();
             }
 
-            // Draw 7-Day Moving Average Line
+            // Moving Average Line
             if (showChartMA) {
-                ctx.strokeStyle = '#34C759'; ctx.lineWidth = 2; ctx.beginPath();
-                let stepX = drawW / Math.max(1, data.length - 1);
-                
+                ctx.strokeStyle = '#0A84FF'; // Blue
+                ctx.lineWidth = 2; ctx.beginPath();
                 for(let i=0; i<data.length; i++) {
                     let sum = 0;
                     for(let j=0; j<7; j++) {
@@ -1012,7 +1056,8 @@
                         sum += parseFloat(v);
                     }
                     let avg = sum / 7;
-                    let x = padX + i * stepX; let y = h - padY - ((avg / maxVal) * drawH);
+                    let x = currentChartType === 'bar' ? padX + (i * barW) + (barW/2) : padX + i * stepX;
+                    let y = h - padYBottom - ((avg / maxVal) * drawH);
                     if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
                 }
                 ctx.stroke();
@@ -1021,8 +1066,7 @@
 
         // --- 9. MAIN UI STATS & RENDER ---
         function calculateRollingStats() {
-            let calSum = 0, calCount = 0;
-            let stepSum = 0, stepCount = 0, stepTotal = 0;
+            let calSum = 0, calCount = 0; let stepSum = 0, stepCount = 0, stepTotal = 0;
             let gymTotal = 0; let weightSum = 0, weightCount = 0;
 
             for (let i = 0; i < 14; i++) {
@@ -1054,16 +1098,11 @@
         }
 
         function updateUI() {
-            ensureDayExists(viewDateStr);
-            const dayData = historyObj[viewDateStr];
-            const currentCals = dayData.calories;
+            ensureDayExists(viewDateStr); const dayData = historyObj[viewDateStr]; const currentCals = dayData.calories;
 
             dateLabel.textContent = formatDisplayDate(viewDateStr);
-            display.textContent = currentCals;
-            targetDisplay.textContent = dailyTarget;
-
-            inWeight.value = dayData.weight || '';
-            inSteps.value = dayData.steps || '';
+            display.textContent = currentCals; targetDisplay.textContent = dailyTarget;
+            inWeight.value = dayData.weight || ''; inSteps.value = dayData.steps || '';
             
             if (dayData.gym === true) { btnGymYes.classList.add('active-yes'); btnGymNo.classList.remove('active-no'); } 
             else { btnGymYes.classList.remove('active-yes'); btnGymNo.classList.add('active-no'); }
