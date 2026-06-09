@@ -25,21 +25,22 @@
             overflow-x: hidden;
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
-        /* --- MAIN VIEW STYLES --- */
-        #main-view {
+        /* Shared View Container */
+        .app-view {
             display: flex;
             flex-direction: column;
             padding: 1.5rem;
             flex-grow: 1;
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
         }
 
+        /* --- MAIN VIEW STYLES --- */
         .logo-container {
             width: 100%;
-            max-width: 450px;
             margin: 0 auto 1rem auto;
             display: flex;
             justify-content: center;
@@ -47,7 +48,7 @@
 
         .app-logo {
             width: 100%;
-            max-width: 250px;
+            max-width: 200px; /* Reduced by 20% */
             aspect-ratio: 3 / 1;
             object-fit: cover;
             object-position: center;
@@ -58,7 +59,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 450px;
             width: 100%;
             margin: 0 auto 1.5rem auto;
             padding-top: 0.5rem;
@@ -99,9 +99,7 @@
             transition: background-color 0.1s;
         }
 
-        .date-btn:active {
-            background-color: #333;
-        }
+        .date-btn:active { background-color: #333; }
 
         .icon-btn {
             background: #1e1e1e;
@@ -118,8 +116,9 @@
             transition: background-color 0.1s;
         }
 
-        .icon-btn:active {
-            background-color: #333;
+        .icon-btn:active, .chart-type-btn.active, .chart-ma-btn.active {
+            background-color: #444;
+            border-color: #666;
         }
 
         /* Hero Layout */
@@ -127,7 +126,6 @@
             display: grid;
             grid-template-columns: auto 1fr;
             gap: 1rem;
-            max-width: 450px;
             width: 100%;
             margin: 0 auto 2rem auto;
             align-items: center;
@@ -152,476 +150,235 @@
             pointer-events: none;
         }
 
-        .ring-bg {
-            fill: none;
-            stroke: #222;
-            stroke-width: 10;
-        }
-
+        .ring-bg { fill: none; stroke: #222; stroke-width: 10; }
         .ring-progress {
-            fill: none;
-            stroke: #34C759;
-            stroke-width: 10;
-            stroke-linecap: round;
-            stroke-dasharray: 534.07;
-            stroke-dashoffset: 534.07;
-            transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
+            fill: none; stroke: #34C759; stroke-width: 10;
+            stroke-linecap: round; stroke-dasharray: 534.07;
+            stroke-dashoffset: 534.07; transition: stroke-dashoffset 0.5s ease-out, stroke 0.3s ease;
         }
-
-        .ring-progress.over-target {
-            stroke: #FF3B30;
-        }
+        .ring-progress.over-target { stroke: #FF3B30; }
 
         .circle-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 10;
         }
 
         .count {
-            font-size: 3.5rem;
-            font-weight: 300;
-            letter-spacing: -2px;
-            transition: transform 0.1s ease;
-            line-height: 1;
-            margin-bottom: 0.5rem;
+            font-size: 3.5rem; font-weight: 300; letter-spacing: -2px;
+            transition: transform 0.1s ease; line-height: 1; margin-bottom: 0.5rem;
         }
 
         .target-btn {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            color: #aaa;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: border-color 0.2s, color 0.2s;
+            background: rgba(255, 255, 255, 0.05); padding: 0.35rem 0.75rem;
+            border-radius: 20px; color: #aaa; font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+            border: 1px solid transparent; transition: border-color 0.2s, color 0.2s;
         }
 
-        .side-metrics {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
+        .side-metrics { display: flex; flex-direction: column; gap: 0.6rem; }
 
         .metric-box {
-            background: #1a1a1a;
-            padding: 0.65rem 1rem;
-            border-radius: 12px;
-            border: 1px solid #222;
+            background: #1a1a1a; padding: 0.65rem 1rem;
+            border-radius: 12px; border: 1px solid #222;
         }
 
         .metric-title {
-            color: #888;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.2rem;
+            color: #888; font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 0.2rem;
         }
 
-        .metric-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .val-red { color: #FF3B30; }
-        .val-green { color: #34C759; }
-        .val-neutral { color: #ffffff; }
+        .metric-value { font-size: 1.1rem; font-weight: 600; }
+        .val-red { color: #FF3B30; } .val-green { color: #34C759; } .val-neutral { color: #ffffff; }
 
         /* Buttons & Inputs */
         .button-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto 2rem auto;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem; width: 100%; margin: 0 auto 2rem auto;
         }
 
         .btn {
-            background-color: #1e1e1e;
-            color: #ffffff;
-            border: 1px solid #333;
-            border-radius: 14px;
-            padding: 1.25rem 0;
-            font-size: 1.2rem;
-            font-weight: 500;
-            cursor: pointer;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            background-color: #1e1e1e; color: #ffffff; border: 1px solid #333;
+            border-radius: 14px; padding: 1.25rem 0; font-size: 1.2rem; font-weight: 500;
+            cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
             transition: background-color 0.1s, transform 0.1s;
         }
 
-        .btn:active {
-            background-color: #333;
-            transform: scale(0.95);
-        }
-
-        .btn-minus {
-            color: #ff8888;
-            border-color: #442222;
-        }
+        .btn:active { background-color: #333; transform: scale(0.95); }
+        .btn-minus { color: #ff8888; border-color: #442222; }
 
         .extras-container {
-            max-width: 450px;
-            width: 100%;
-            margin: 0 auto 2rem auto;
-            background: #151515;
-            border-radius: 16px;
-            border: 1px solid #222;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            width: 100%; margin: 0 auto 2rem auto; background: #151515;
+            border-radius: 16px; border: 1px solid #222; padding: 1rem;
+            display: flex; flex-direction: column; gap: 1rem;
         }
 
-        .extra-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .extra-label {
-            font-size: 0.95rem;
-            color: #ccc;
-        }
-
+        .extra-row { display: flex; justify-content: space-between; align-items: center; }
+        .extra-label { font-size: 0.95rem; color: #ccc; }
         .extra-input {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 0.6rem 1rem;
-            border-radius: 10px;
-            width: 120px;
-            text-align: right;
-            font-size: 1rem;
+            background: #1a1a1a; border: 1px solid #333; color: #fff;
+            padding: 0.6rem 1rem; border-radius: 10px; width: 120px;
+            text-align: right; font-size: 1rem;
         }
-        
         .extra-input:focus { outline: none; border-color: #555; }
 
         .toggle-group { display: flex; gap: 0.5rem; }
-
         .toggle-btn {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #888;
-            padding: 0.6rem 1rem;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            width: 60px;
-            transition: all 0.2s;
+            background: #1a1a1a; border: 1px solid #333; color: #888;
+            padding: 0.6rem 1rem; border-radius: 10px; font-size: 0.95rem;
+            cursor: pointer; width: 60px; transition: all 0.2s; -webkit-tap-highlight-color: transparent;
         }
-
         .toggle-btn.active-yes { background: #233526; border-color: #34C759; color: #34C759; }
         .toggle-btn.active-no { background: #3a1c1c; border-color: #FF3B30; color: #FF3B30; }
 
         /* Stats */
         .stats-container {
-            max-width: 450px;
-            margin: 0 auto;
-            width: 100%;
-            border-top: 1px solid #222;
-            padding-top: 2rem;
-            padding-bottom: 2rem;
+            width: 100%; border-top: 1px solid #222;
+            padding-top: 2rem; padding-bottom: 2rem;
         }
 
+        .average-box, .stat-card {
+            background-color: #1a1a1a; border-radius: 16px; border: 1px solid #222;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s;
+        }
+        .average-box:active, .stat-card:active { transform: scale(0.98); border-color: #444; }
+
         .average-box {
-            background-color: #1a1a1a;
-            padding: 1.25rem;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-            border: 1px solid #222;
+            padding: 1.25rem; display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 0.75rem;
         }
 
         .avg-label, .stat-label {
-            color: #888;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
         }
-
         .stat-label { font-size: 0.7rem; margin-bottom: 0.4rem; }
-
         .avg-val { font-size: 1.75rem; font-weight: 400; }
         .stat-val { font-size: 1.3rem; font-weight: 500; color: #fff; }
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 0.75rem; margin-bottom: 1.5rem;
         }
 
-        .stat-card {
-            background-color: #1a1a1a;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid #222;
-            display: flex;
-            flex-direction: column;
-        }
+        .stat-card { padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; }
 
         .export-btn, .return-btn {
-            width: 100%;
-            background: transparent;
-            border: 1px solid #333;
-            color: #888;
-            padding: 1rem;
-            border-radius: 16px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background-color 0.2s, color 0.2s;
+            width: 100%; background: transparent; border: 1px solid #333; color: #888;
+            padding: 1rem; border-radius: 16px; font-size: 0.9rem; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; transition: background-color 0.2s, color 0.2s;
         }
-
         .return-btn {
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 1.25rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 2rem;
+            background: #ffffff; color: #000000; border: none; padding: 1.25rem;
+            font-size: 1.1rem; font-weight: 600; margin-top: auto;
         }
 
         /* --- CALENDAR VIEW STYLES --- */
-        #calendar-view {
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem;
-            flex-grow: 1;
-            max-width: 450px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
         .cal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-top: 0.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem; padding-top: 0.5rem;
         }
-
         .cal-month-title { font-size: 1.5rem; font-weight: 600; }
-
         .cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            margin-bottom: 2rem;
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 8px; margin-bottom: 2rem;
         }
-
         .cal-day-label {
-            text-align: center;
-            color: #888;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
+            text-align: center; color: #888; font-size: 0.75rem;
+            text-transform: uppercase; margin-bottom: 0.5rem;
         }
-
         .cal-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1a1a1a;
-            border: 1px solid #222;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+            background: #1a1a1a; border: 1px solid #222; border-radius: 8px;
+            font-size: 1rem; cursor: pointer; -webkit-tap-highlight-color: transparent;
         }
-
         .cal-green { background: rgba(52, 199, 89, 0.15); border-color: #34C759; color: #34C759; font-weight: bold; }
         .cal-red { background: rgba(255, 59, 48, 0.15); border-color: #FF3B30; color: #FF3B30; font-weight: bold; }
         .cal-selected { border: 2px solid #fff; }
 
         /* --- TIMER VIEW STYLES --- */
-        #timer-view {
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem;
-            flex-grow: 1;
-            max-width: 450px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
         .timer-header {
-            text-align: center;
-            font-size: 1.25rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #888;
-            margin-bottom: 2rem;
-            padding-top: 0.5rem;
+            text-align: center; font-size: 1.25rem; font-weight: 500; letter-spacing: 1px;
+            text-transform: uppercase; color: #888; margin-bottom: 2rem; padding-top: 0.5rem;
         }
-
         .timer-display-area {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 220px;
-            height: 220px;
-            margin: 0 auto 2.5rem auto;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            width: 220px; height: 220px; margin: 0 auto 2.5rem auto;
         }
-
         .timer-ring {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-            pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            transform: rotate(-90deg); pointer-events: none;
         }
-
-        .timer-ring-bg {
-            fill: none;
-            stroke: #222;
-            stroke-width: 8;
-        }
-
+        .timer-ring-bg { fill: none; stroke: #222; stroke-width: 8; }
         .timer-ring-progress {
-            fill: none;
-            stroke: #444; /* Default idle color */
-            stroke-width: 8;
-            stroke-linecap: round;
-            stroke-dasharray: 628.32; /* 2 * pi * 100 */
-            stroke-dashoffset: 0;
-            /* 1s linear transition ensures smooth ticking rather than snapping */
+            fill: none; stroke: #444; stroke-width: 8; stroke-linecap: round;
+            stroke-dasharray: 628.32; stroke-dashoffset: 0;
             transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
         }
-
-        .timer-ring-progress.ring-work { stroke: #34C759; } /* Green */
-        .timer-ring-progress.ring-rest { stroke: #0A84FF; } /* Blue */
+        .timer-ring-progress.ring-work { stroke: #34C759; }
+        .timer-ring-progress.ring-rest { stroke: #0A84FF; }
 
         .timer-circle-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10;
         }
-
         .timer-status {
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
+            font-size: 1rem; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; margin-bottom: 0.2rem;
         }
-        
-        .status-idle { color: #888; }
-        .status-work { color: #34C759; }
-        .status-rest { color: #0A84FF; }
-
+        .status-idle { color: #888; } .status-work { color: #34C759; } .status-rest { color: #0A84FF; }
         .timer-time {
-            font-size: 4.5rem;
-            font-weight: 300;
-            letter-spacing: -2px;
-            line-height: 1;
-            font-variant-numeric: tabular-nums;
+            font-size: 4.5rem; font-weight: 300; letter-spacing: -2px; line-height: 1; font-variant-numeric: tabular-nums;
         }
+        .timer-sets-count { font-size: 1.1rem; color: #aaa; margin-top: 0.75rem; }
 
-        .timer-sets-count {
-            font-size: 1.1rem;
-            color: #aaa;
-            margin-top: 0.75rem;
-        }
-
-        .slider-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .slider-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            color: #ccc;
-            font-size: 0.95rem;
-        }
-
-        .slider-val {
-            font-weight: 600;
-            color: #fff;
-        }
-
-        /* Custom Range Slider */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        
+        .slider-group { margin-bottom: 1.5rem; }
+        .slider-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #ccc; font-size: 0.95rem; }
+        .slider-val { font-weight: 600; color: #fff; }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
         input[type=range]:focus { outline: none; }
-        
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 6px;
-            cursor: pointer;
-            background: #333;
-            border-radius: 4px;
-        }
-        
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #333; border-radius: 4px; }
         input[type=range]::-webkit-slider-thumb {
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -9px;
-            border: 2px solid #121212;
+            height: 24px; width: 24px; border-radius: 50%; background: #ffffff; cursor: pointer;
+            -webkit-appearance: none; margin-top: -9px; border: 2px solid #121212;
         }
 
-        .timer-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
+        .timer-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
         .timer-btn {
-            background-color: #1e1e1e;
-            color: #ffffff;
-            border: 1px solid #333;
-            border-radius: 14px;
-            padding: 1.25rem 0;
-            font-size: 1.1rem;
-            font-weight: 500;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background-color 0.1s;
+            background-color: #1e1e1e; color: #ffffff; border: 1px solid #333; border-radius: 14px;
+            padding: 1.25rem 0; font-size: 1.1rem; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-start { background-color: #1a3320; border-color: #2e5c38; color: #4cd964; }
+
+        /* --- CHART VIEW STYLES --- */
+        .chart-filters { display: flex; justify-content: space-between; margin-bottom: 1rem; gap: 0.5rem; }
+        .chart-day-btn { width: auto; flex: 1; padding: 0.5rem 0; }
+        .chart-day-btn.active { background: #444; color: #fff; border-color: #666;}
+        
+        .chart-toggles { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: flex-end; }
+        
+        #chart-canvas {
+            width: 100%; height: auto; background: #1a1a1a;
+            border-radius: 12px; border: 1px solid #222; margin-bottom: 2rem;
         }
 
-        .timer-btn:active { background-color: #333; }
-        .btn-start { background-color: #1a3320; border-color: #2e5c38; color: #4cd964; }
-        .btn-start:active { background-color: #122416; }
-
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999;
+            display: flex; align-items: center; justify-content: center; padding: 2rem;
+        }
+        .modal-box {
+            background: #1a1a1a; padding: 2rem; border-radius: 16px;
+            border: 1px solid #333; text-align: center; width: 100%; max-width: 320px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="main-view">
+    <div id="main-view" class="app-view">
         <div class="logo-container">
             <img src="icon.png" alt="App Logo" class="app-logo">
         </div>
 
         <div class="top-bar">
-            <button class="icon-btn" onclick="toggleTimer()">
+            <button class="icon-btn" onclick="openSubView('timer-view')">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="13" r="8"></circle>
                     <polyline points="12 9 12 13 14 15"></polyline>
@@ -638,7 +395,7 @@
                 <button class="date-btn" onclick="changeDate(1)">&#8594;</button>
             </div>
 
-            <button class="icon-btn" onclick="toggleCalendar()">
+            <button class="icon-btn" onclick="openSubView('calendar-view'); renderCalendar();">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -677,12 +434,12 @@
         </div>
 
         <div class="button-grid">
+            <button class="btn" onclick="adjustCalories(50)">+50</button>
             <button class="btn" onclick="adjustCalories(100)">+100</button>
             <button class="btn" onclick="adjustCalories(200)">+200</button>
             <button class="btn" onclick="adjustCalories(300)">+300</button>
             <button class="btn" onclick="adjustCalories(500)">+500</button>
-            <button class="btn" onclick="adjustCalories(1000)">+1000</button>
-            <button class="btn btn-minus" onclick="adjustCalories(-100)">-100</button>
+            <button class="btn btn-minus" id="btn-minus-100">-100</button>
         </div>
 
         <div class="extras-container">
@@ -704,25 +461,25 @@
         </div>
 
         <div class="stats-container">
-            <div class="average-box">
+            <div class="average-box" onclick="initChart('calories', 'Calories')">
                 <div class="avg-label">7-Day Calorie Avg</div>
                 <div class="avg-val" id="avg-display">0</div>
             </div>
             
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" onclick="initChart('steps', 'Steps')">
                     <div class="stat-label">7-Day Steps Avg</div>
                     <div class="stat-val" id="stat-steps-avg">0</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="initChart('steps', 'Steps')">
                     <div class="stat-label">7-Day Steps Total</div>
                     <div class="stat-val" id="stat-steps-total">0</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="initChart('weight', 'Weight')">
                     <div class="stat-label">14-Day Weight Avg</div>
                     <div class="stat-val" id="stat-weight-avg">--</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="initChart('gym', 'Gym Sessions')">
                     <div class="stat-label">7-Day Gym Total</div>
                     <div class="stat-val" id="stat-gym-total">0</div>
                 </div>
@@ -732,7 +489,7 @@
         </div>
     </div>
 
-    <div id="calendar-view" class="hidden">
+    <div id="calendar-view" class="app-view hidden">
         <div class="cal-header">
             <button class="icon-btn" onclick="changeCalMonth(-1)">&#8592;</button>
             <div class="cal-month-title" id="cal-month-year">Month</div>
@@ -740,10 +497,10 @@
         </div>
         
         <div class="cal-grid" id="cal-grid"></div>
-        <button class="return-btn" onclick="jumpToToday()">Return to Today</button>
+        <button class="return-btn" onclick="returnToMainView()">Return</button>
     </div>
 
-    <div id="timer-view" class="hidden">
+    <div id="timer-view" class="app-view hidden">
         <div class="timer-header">Workout Timer</div>
 
         <div class="timer-display-area">
@@ -787,18 +544,64 @@
             <button class="timer-btn btn-start" id="btn-timer-action" onclick="toggleTimerAction()">Start</button>
         </div>
 
-        <button class="return-btn" onclick="jumpToToday()">Return to Today</button>
+        <button class="return-btn" onclick="returnToMainView()">Return</button>
+    </div>
+
+    <div id="chart-view" class="app-view hidden">
+        <div class="timer-header">History</div>
+        <h2 id="chart-title" style="text-align:center; font-size:2rem; margin-bottom:2rem; font-weight:300;">Metric</h2>
+        
+        <div class="chart-filters">
+            <button class="toggle-btn chart-day-btn active" onclick="setChartDays(7, this)">7D</button>
+            <button class="toggle-btn chart-day-btn" onclick="setChartDays(14, this)">14D</button>
+            <button class="toggle-btn chart-day-btn" onclick="setChartDays(30, this)">30D</button>
+            <button class="toggle-btn chart-day-btn" onclick="setChartDays(90, this)">90D</button>
+            <button class="toggle-btn chart-day-btn" onclick="setChartDays(180, this)">180D</button>
+        </div>
+
+        <div class="chart-toggles">
+            <button class="icon-btn chart-type-btn active" onclick="setChartType('bar', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 9h4v11H4zm6-5h4v16h-4zm6 9h4v7h-4z"/>
+                </svg>
+            </button>
+            <button class="icon-btn chart-type-btn" onclick="setChartType('line', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 17 10 11 14 15 20 9"/>
+                </svg>
+            </button>
+            <button class="icon-btn chart-ma-btn" id="btn-ma-toggle" onclick="toggleMA(this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12c3-4 6-4 9 0 3 4 6 4 9 0"/>
+                </svg>
+            </button>
+        </div>
+
+        <canvas id="chart-canvas" width="400" height="300"></canvas>
+
+        <button class="return-btn" onclick="returnToMainView()">Return</button>
+    </div>
+
+    <div id="reset-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem;">Reset Day</h3>
+            <p style="color: #aaa; font-size: 0.95rem; margin-bottom: 2rem;">Are you sure you want to reset today's calories to zero?</p>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn" style="flex: 1; padding: 1rem 0; font-size: 1rem; border-color: #442222; color: #ff8888;" onclick="confirmReset(true)">Yes</button>
+                <button class="btn" style="flex: 1; padding: 1rem 0; font-size: 1rem;" onclick="confirmReset(false)">No</button>
+            </div>
+        </div>
     </div>
 
     <script>
         // --- 1. DATA SETUP ---
         let rawHistory = JSON.parse(localStorage.getItem('calorieHistory')) || {};
-        let history = {};
+        let historyObj = {};
         for (let date in rawHistory) {
             if (typeof rawHistory[date] === 'number') {
-                history[date] = { calories: rawHistory[date], weight: null, gym: false, steps: null };
+                historyObj[date] = { calories: rawHistory[date], weight: null, gym: false, steps: null };
             } else {
-                history[date] = rawHistory[date];
+                historyObj[date] = rawHistory[date];
             }
         }
         
@@ -815,10 +618,6 @@
         let calViewDate = new Date();
 
         // UI Selectors
-        const mainView = document.getElementById('main-view');
-        const calView = document.getElementById('calendar-view');
-        const timerView = document.getElementById('timer-view');
-        
         const display = document.getElementById('calorie-display');
         const targetDisplay = document.getElementById('target-display');
         const dateLabel = document.getElementById('date-label');
@@ -839,20 +638,44 @@
         const statWeightAvg = document.getElementById('stat-weight-avg');
         const statGymTotal = document.getElementById('stat-gym-total');
 
-        // --- 2. SWIPE GESTURES ---
-        let touchstartX = 0;
-        let touchendX = 0;
-
-        mainView.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
-        mainView.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX; handleSwipe(); }, {passive: true});
-
-        function handleSwipe() {
-            const swipeThreshold = 50; 
-            if (touchendX < touchstartX - swipeThreshold) changeDate(1);
-            if (touchendX > touchstartX + swipeThreshold) changeDate(-1);
+        // --- 2. VIEW NAVIGATION & ANDROID BACK BUTTON (HISTORY API) ---
+        function openSubView(viewId) {
+            document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            window.history.pushState({ view: viewId }, '');
         }
 
-        // --- 3. UTILITY FUNCTIONS ---
+        function returnToMainView() {
+            if (window.history.state) {
+                window.history.back(); // Triggers popstate
+            } else {
+                // Fallback if accessed directly
+                document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
+                document.getElementById('main-view').classList.remove('hidden');
+                updateUI();
+            }
+        }
+
+        window.addEventListener('popstate', () => {
+            // Revert to main view on physical back button
+            document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
+            document.getElementById('main-view').classList.remove('hidden');
+            updateUI(); 
+        });
+
+        // --- 3. SWIPE GESTURES (Main View Only) ---
+        let touchstartX = 0;
+        let touchendX = 0;
+        const mainViewEl = document.getElementById('main-view');
+
+        mainViewEl.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
+        mainViewEl.addEventListener('touchend', e => { 
+            touchendX = e.changedTouches[0].screenX; 
+            if (touchendX < touchstartX - 50) changeDate(1);
+            if (touchendX > touchstartX + 50) changeDate(-1);
+        }, {passive: true});
+
+        // --- 4. UTILITY FUNCTIONS ---
         function addDaysStr(dateStr, days) {
             const [y, m, d] = dateStr.split('-');
             const date = new Date(y, m - 1, d);
@@ -876,16 +699,16 @@
         }
 
         function ensureDayExists(dateStr) {
-            if (typeof history[dateStr] === 'undefined') {
-                history[dateStr] = { calories: 0, weight: null, gym: false, steps: null };
+            if (typeof historyObj[dateStr] === 'undefined') {
+                historyObj[dateStr] = { calories: 0, weight: null, gym: false, steps: null };
             }
         }
 
         function saveState() {
-            localStorage.setItem('calorieHistory', JSON.stringify(history));
+            localStorage.setItem('calorieHistory', JSON.stringify(historyObj));
         }
 
-        // --- 4. DATA INPUT HANDLERS ---
+        // --- 5. DATA INPUT HANDLERS ---
         function changeDate(direction) {
             viewDateStr = addDaysStr(viewDateStr, direction);
             updateUI();
@@ -902,194 +725,68 @@
 
         function adjustCalories(amount) {
             ensureDayExists(viewDateStr);
-            history[viewDateStr].calories += amount;
-            if (history[viewDateStr].calories < 0) history[viewDateStr].calories = 0;
+            historyObj[viewDateStr].calories += amount;
+            if (historyObj[viewDateStr].calories < 0) historyObj[viewDateStr].calories = 0;
             
             display.style.transform = 'scale(1.05)';
             setTimeout(() => display.style.transform = 'scale(1)', 100);
             updateUI();
         }
 
-        function setGym(status) {
-            ensureDayExists(viewDateStr);
-            history[viewDateStr].gym = status;
-            updateUI();
-        }
+        // --- LONG PRESS RESET LOGIC ---
+        const btnMinus = document.getElementById('btn-minus-100');
+        let pressTimer = null;
 
-        function setWeight(val) {
-            ensureDayExists(viewDateStr);
-            history[viewDateStr].weight = val ? parseFloat(val).toFixed(1) : null;
-            saveState(); 
-            updateTopMetrics(); 
-            calculateRollingStats(); 
-        }
+        btnMinus.addEventListener('touchstart', () => {
+            pressTimer = setTimeout(() => {
+                pressTimer = null;
+                document.getElementById('reset-modal').classList.remove('hidden');
+            }, 5000);
+        }, {passive: true});
 
-        function setSteps(val) {
-            ensureDayExists(viewDateStr);
-            history[viewDateStr].steps = val ? parseInt(val) : null;
-            saveState(); 
-            updateTopMetrics(); 
-            calculateRollingStats(); 
-        }
-
-        // --- NAVIGATION CONTROLS ---
-        function toggleCalendar() {
-            mainView.classList.add('hidden');
-            timerView.classList.add('hidden');
-            calView.classList.remove('hidden');
-            const [y, m, d] = viewDateStr.split('-');
-            calViewDate = new Date(y, m - 1, 1);
-            renderCalendar();
-        }
-
-        function toggleTimer() {
-            mainView.classList.add('hidden');
-            calView.classList.add('hidden');
-            timerView.classList.remove('hidden');
-            updateTimerSettings(); 
-        }
-
-        function jumpToToday() {
-            viewDateStr = realToday;
-            calView.classList.add('hidden');
-            timerView.classList.add('hidden');
-            mainView.classList.remove('hidden');
-            updateUI();
-        }
-
-        // --- 5. TIMER ENGINE ---
-        let timerInterval;
-        let isTimerRunning = false;
-        let timerPhase = 'idle'; // 'idle', 'work', 'rest', 'done'
-        let currentSet = 1;
-        let timeRemaining = 0;
-        let totalPhaseTime = 0; // Needed to calculate the ring circle drain percentage
-
-        const sliderSets = document.getElementById('slider-sets');
-        const sliderWork = document.getElementById('slider-work');
-        const sliderRest = document.getElementById('slider-rest');
-        const valSets = document.getElementById('val-sets');
-        const valWork = document.getElementById('val-work');
-        const valRest = document.getElementById('val-rest');
-        
-        const timerStatusText = document.getElementById('timer-status-text');
-        const timerTimeDisplay = document.getElementById('timer-time-display');
-        const timerSetCounter = document.getElementById('timer-set-counter');
-        const timerProgressCircle = document.getElementById('timer-progress-circle');
-        const btnTimerAction = document.getElementById('btn-timer-action');
-
-        const TIMER_CIRCUMFERENCE = 628.32; // 2 * pi * 100
-
-        function updateTimerSettings() {
-            valSets.textContent = sliderSets.value;
-            valWork.textContent = formatTimeSec(sliderWork.value);
-            valRest.textContent = formatTimeSec(sliderRest.value);
-            
-            if (!isTimerRunning && timerPhase === 'idle') {
-                timerTimeDisplay.textContent = formatTimeSec(sliderWork.value);
-                timerSetCounter.textContent = `Set 1 of ${sliderSets.value}`;
-                timerProgressCircle.style.strokeDashoffset = 0; // Full ring
-            }
-        }
-
-        function toggleTimerAction() {
-            if (timerPhase === 'done') resetTimer();
-
-            if (isTimerRunning) {
-                clearInterval(timerInterval);
-                isTimerRunning = false;
-                btnTimerAction.textContent = "Resume";
+        btnMinus.addEventListener('touchend', (e) => {
+            if (pressTimer) {
+                clearTimeout(pressTimer);
+                e.preventDefault(); // Stop ghost click
+                adjustCalories(-100);
             } else {
-                if (timerPhase === 'idle') {
-                    timerPhase = 'work';
-                    timeRemaining = parseInt(sliderWork.value);
-                    totalPhaseTime = timeRemaining;
-                    currentSet = 1;
-                }
-                isTimerRunning = true;
-                btnTimerAction.textContent = "Pause";
-                updateTimerVisuals();
-                timerInterval = setInterval(timerTick, 1000);
+                e.preventDefault(); // Modal already up, stop ghost click
+            }
+        }, {passive: false});
+
+        // Mouse fallbacks for testing on PC
+        btnMinus.addEventListener('mousedown', () => {
+            pressTimer = setTimeout(() => {
+                pressTimer = null;
+                document.getElementById('reset-modal').classList.remove('hidden');
+            }, 5000);
+        });
+        btnMinus.addEventListener('mouseup', () => {
+            if (pressTimer) { clearTimeout(pressTimer); adjustCalories(-100); }
+        });
+        btnMinus.addEventListener('mouseleave', () => {
+            if(pressTimer) clearTimeout(pressTimer);
+        });
+
+        function confirmReset(isYes) {
+            document.getElementById('reset-modal').classList.add('hidden');
+            if (isYes) {
+                historyObj[viewDateStr].calories = 0;
+                updateUI();
             }
         }
 
-        function timerTick() {
-            timeRemaining--;
-
-            if (timeRemaining < 0) {
-                if (timerPhase === 'work') {
-                    if (currentSet >= parseInt(sliderSets.value)) {
-                        // Finished entirely
-                        timerPhase = 'done';
-                        isTimerRunning = false;
-                        clearInterval(timerInterval);
-                        btnTimerAction.textContent = "Start";
-                        timerStatusText.textContent = "COMPLETE!";
-                        timerStatusText.className = "timer-status status-work";
-                        timerTimeDisplay.textContent = "00:00";
-                        timerProgressCircle.style.strokeDashoffset = 0;
-                        timerProgressCircle.classList.remove('ring-rest');
-                        timerProgressCircle.classList.add('ring-work');
-                        return;
-                    } else if (parseInt(sliderRest.value) > 0) {
-                        // Move to Rest phase
-                        timerPhase = 'rest';
-                        timeRemaining = parseInt(sliderRest.value);
-                        totalPhaseTime = timeRemaining;
-                    } else {
-                        // Skip rest if it was set to 0s
-                        currentSet++;
-                        timeRemaining = parseInt(sliderWork.value);
-                        totalPhaseTime = timeRemaining;
-                    }
-                } else if (timerPhase === 'rest') {
-                    // Move to Work phase
-                    timerPhase = 'work';
-                    currentSet++;
-                    timeRemaining = parseInt(sliderWork.value);
-                    totalPhaseTime = timeRemaining;
-                }
-            }
-            updateTimerVisuals();
+        // Extra data tracking
+        function setGym(status) {
+            ensureDayExists(viewDateStr); historyObj[viewDateStr].gym = status; updateUI();
         }
-
-        function updateTimerVisuals() {
-            timerTimeDisplay.textContent = formatTimeSec(timeRemaining);
-            timerSetCounter.textContent = `Set ${currentSet} of ${sliderSets.value}`;
-
-            // Calculate how much the ring has drained
-            let percentage = totalPhaseTime > 0 ? (timeRemaining / totalPhaseTime) : 0;
-            let offset = TIMER_CIRCUMFERENCE - (percentage * TIMER_CIRCUMFERENCE);
-            timerProgressCircle.style.strokeDashoffset = offset;
-
-            // Handle Ring & Text Colors
-            timerProgressCircle.classList.remove('ring-work', 'ring-rest');
-            
-            if (timerPhase === 'work') {
-                timerStatusText.textContent = "WORK";
-                timerStatusText.className = "timer-status status-work";
-                timerProgressCircle.classList.add('ring-work');
-            } else if (timerPhase === 'rest') {
-                timerStatusText.textContent = "REST";
-                timerStatusText.className = "timer-status status-rest";
-                timerProgressCircle.classList.add('ring-rest');
-            }
+        function setWeight(val) {
+            ensureDayExists(viewDateStr); historyObj[viewDateStr].weight = val ? parseFloat(val).toFixed(1) : null;
+            saveState(); updateTopMetrics(); calculateRollingStats(); 
         }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            timerPhase = 'idle';
-            currentSet = 1;
-            btnTimerAction.textContent = "Start";
-            timerStatusText.textContent = "IDLE";
-            timerStatusText.className = "timer-status status-idle";
-            
-            // Reset Ring
-            timerProgressCircle.classList.remove('ring-work', 'ring-rest');
-            timerProgressCircle.style.strokeDashoffset = 0;
-            
-            updateTimerSettings();
+        function setSteps(val) {
+            ensureDayExists(viewDateStr); historyObj[viewDateStr].steps = val ? parseInt(val) : null;
+            saveState(); updateTopMetrics(); calculateRollingStats(); 
         }
 
         // --- 6. CALENDAR LOGIC ---
@@ -1106,15 +803,11 @@
 
             const firstDay = new Date(year, month, 1).getDay(); 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-
             const grid = document.getElementById('cal-grid');
             grid.innerHTML = '';
 
             ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
-                const el = document.createElement('div');
-                el.className = 'cal-day-label';
-                el.textContent = day;
-                grid.appendChild(el);
+                const el = document.createElement('div'); el.className = 'cal-day-label'; el.textContent = day; grid.appendChild(el);
             });
 
             for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
@@ -1125,8 +818,8 @@
                 el.className = 'cal-day';
                 el.textContent = i;
 
-                if (history[dStr] && history[dStr].calories > 0) {
-                    if (history[dStr].calories > dailyTarget) el.classList.add('cal-red');
+                if (historyObj[dStr] && historyObj[dStr].calories > 0) {
+                    if (historyObj[dStr].calories > dailyTarget) el.classList.add('cal-red');
                     else el.classList.add('cal-green');
                 }
 
@@ -1134,40 +827,213 @@
 
                 el.onclick = () => {
                     viewDateStr = dStr;
-                    jumpToToday();
+                    returnToMainView(); // Safely return and update UI
                 };
 
                 grid.appendChild(el);
             }
         }
 
-        // --- 7. MAIN UI STATS & RENDER ---
+        // --- 7. TIMER ENGINE ---
+        let timerInterval; let isTimerRunning = false; let timerPhase = 'idle';
+        let currentSet = 1; let timeRemaining = 0; let totalPhaseTime = 0; 
+
+        const sliderSets = document.getElementById('slider-sets');
+        const sliderWork = document.getElementById('slider-work');
+        const sliderRest = document.getElementById('slider-rest');
+        const valSets = document.getElementById('val-sets');
+        const valWork = document.getElementById('val-work');
+        const valRest = document.getElementById('val-rest');
+        
+        const timerStatusText = document.getElementById('timer-status-text');
+        const timerTimeDisplay = document.getElementById('timer-time-display');
+        const timerSetCounter = document.getElementById('timer-set-counter');
+        const timerProgressCircle = document.getElementById('timer-progress-circle');
+        const btnTimerAction = document.getElementById('btn-timer-action');
+
+        function updateTimerSettings() {
+            valSets.textContent = sliderSets.value;
+            valWork.textContent = formatTimeSec(sliderWork.value);
+            valRest.textContent = formatTimeSec(sliderRest.value);
+            
+            if (!isTimerRunning && timerPhase === 'idle') {
+                timerTimeDisplay.textContent = formatTimeSec(sliderWork.value);
+                timerSetCounter.textContent = `Set 1 of ${sliderSets.value}`;
+                timerProgressCircle.style.strokeDashoffset = 0; 
+            }
+        }
+
+        function toggleTimerAction() {
+            if (timerPhase === 'done') resetTimer();
+
+            if (isTimerRunning) {
+                clearInterval(timerInterval); isTimerRunning = false; btnTimerAction.textContent = "Resume";
+            } else {
+                if (timerPhase === 'idle') {
+                    timerPhase = 'work'; timeRemaining = parseInt(sliderWork.value);
+                    totalPhaseTime = timeRemaining; currentSet = 1;
+                }
+                isTimerRunning = true; btnTimerAction.textContent = "Pause";
+                updateTimerVisuals(); timerInterval = setInterval(timerTick, 1000);
+            }
+        }
+
+        function timerTick() {
+            timeRemaining--;
+            if (timeRemaining < 0) {
+                if (timerPhase === 'work') {
+                    if (currentSet >= parseInt(sliderSets.value)) {
+                        timerPhase = 'done'; isTimerRunning = false; clearInterval(timerInterval);
+                        btnTimerAction.textContent = "Start"; timerStatusText.textContent = "COMPLETE!";
+                        timerStatusText.className = "timer-status status-work"; timerTimeDisplay.textContent = "00:00";
+                        timerProgressCircle.style.strokeDashoffset = 0;
+                        timerProgressCircle.classList.remove('ring-rest'); timerProgressCircle.classList.add('ring-work');
+                        return;
+                    } else if (parseInt(sliderRest.value) > 0) {
+                        timerPhase = 'rest'; timeRemaining = parseInt(sliderRest.value); totalPhaseTime = timeRemaining;
+                    } else {
+                        currentSet++; timeRemaining = parseInt(sliderWork.value); totalPhaseTime = timeRemaining;
+                    }
+                } else if (timerPhase === 'rest') {
+                    timerPhase = 'work'; currentSet++; timeRemaining = parseInt(sliderWork.value); totalPhaseTime = timeRemaining;
+                }
+            }
+            updateTimerVisuals();
+        }
+
+        function updateTimerVisuals() {
+            timerTimeDisplay.textContent = formatTimeSec(timeRemaining);
+            timerSetCounter.textContent = `Set ${currentSet} of ${sliderSets.value}`;
+            let percentage = totalPhaseTime > 0 ? (timeRemaining / totalPhaseTime) : 0;
+            timerProgressCircle.style.strokeDashoffset = 628.32 - (percentage * 628.32);
+            timerProgressCircle.classList.remove('ring-work', 'ring-rest');
+            
+            if (timerPhase === 'work') {
+                timerStatusText.textContent = "WORK"; timerStatusText.className = "timer-status status-work";
+                timerProgressCircle.classList.add('ring-work');
+            } else if (timerPhase === 'rest') {
+                timerStatusText.textContent = "REST"; timerStatusText.className = "timer-status status-rest";
+                timerProgressCircle.classList.add('ring-rest');
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval); isTimerRunning = false; timerPhase = 'idle'; currentSet = 1;
+            btnTimerAction.textContent = "Start"; timerStatusText.textContent = "IDLE"; timerStatusText.className = "timer-status status-idle";
+            timerProgressCircle.classList.remove('ring-work', 'ring-rest'); timerProgressCircle.style.strokeDashoffset = 0;
+            updateTimerSettings();
+        }
+
+        // --- 8. CHARTS ENGINE ---
+        let currentChartMetric = 'calories';
+        let currentChartDays = 7;
+        let currentChartType = 'bar';
+        let showChartMA = false;
+
+        function initChart(metric, title) {
+            currentChartMetric = metric;
+            document.getElementById('chart-title').textContent = title;
+            openSubView('chart-view');
+            drawChart();
+        }
+
+        function setChartDays(days, el) {
+            currentChartDays = days;
+            document.querySelectorAll('.chart-day-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            drawChart();
+        }
+
+        function setChartType(type, el) {
+            currentChartType = type;
+            document.querySelectorAll('.chart-type-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            drawChart();
+        }
+
+        function toggleMA(el) {
+            showChartMA = !showChartMA;
+            if(showChartMA) el.classList.add('active');
+            else el.classList.remove('active');
+            drawChart();
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('chart-canvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width; const h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+
+            let data = [];
+            for (let i = currentChartDays - 1; i >= 0; i--) {
+                let dStr = addDaysStr(viewDateStr, -i);
+                let dayData = historyObj[dStr] || {};
+                let val = dayData[currentChartMetric] || 0;
+                if(currentChartMetric === 'gym') val = dayData.gym ? 1 : 0;
+                data.push(parseFloat(val));
+            }
+
+            let maxVal = Math.max(...data, 1) * 1.15; // Padding above highest point
+            const padX = 15, padY = 20;
+            const drawW = w - padX * 2; const drawH = h - padY * 2;
+
+            // Draw Base Chart
+            if (currentChartType === 'bar') {
+                let barW = drawW / data.length;
+                ctx.fillStyle = '#444';
+                let gap = data.length <= 30 ? 2 : 0;
+                data.forEach((val, i) => {
+                    let barH = (val / maxVal) * drawH;
+                    ctx.fillRect(padX + (i * barW) + (gap/2), h - padY - barH, barW - gap, barH);
+                });
+            } else {
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.beginPath();
+                let stepX = drawW / Math.max(1, data.length - 1);
+                data.forEach((val, i) => {
+                    let x = padX + i * stepX; let y = h - padY - ((val / maxVal) * drawH);
+                    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+                });
+                ctx.stroke();
+            }
+
+            // Draw 7-Day Moving Average Line
+            if (showChartMA) {
+                ctx.strokeStyle = '#34C759'; ctx.lineWidth = 2; ctx.beginPath();
+                let stepX = drawW / Math.max(1, data.length - 1);
+                
+                for(let i=0; i<data.length; i++) {
+                    let sum = 0;
+                    for(let j=0; j<7; j++) {
+                        let offset = (currentChartDays - 1 - i) + j;
+                        let checkDate = addDaysStr(viewDateStr, -offset);
+                        let dayData = historyObj[checkDate] || {};
+                        let v = dayData[currentChartMetric] || 0;
+                        if(currentChartMetric === 'gym') v = dayData.gym ? 1 : 0;
+                        sum += parseFloat(v);
+                    }
+                    let avg = sum / 7;
+                    let x = padX + i * stepX; let y = h - padY - ((avg / maxVal) * drawH);
+                    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        // --- 9. MAIN UI STATS & RENDER ---
         function calculateRollingStats() {
             let calSum = 0, calCount = 0;
             let stepSum = 0, stepCount = 0, stepTotal = 0;
-            let gymTotal = 0;
-            let weightSum = 0, weightCount = 0;
+            let gymTotal = 0; let weightSum = 0, weightCount = 0;
 
             for (let i = 0; i < 14; i++) {
                 let checkDate = addDaysStr(viewDateStr, -i);
-                let dayData = history[checkDate];
+                let dayData = historyObj[checkDate];
 
                 if (dayData) {
-                    if (dayData.weight) {
-                        weightSum += parseFloat(dayData.weight);
-                        weightCount++;
-                    }
-
+                    if (dayData.weight) { weightSum += parseFloat(dayData.weight); weightCount++; }
                     if (i < 7) {
-                        if (dayData.calories > 0 || checkDate === realToday) {
-                            calSum += dayData.calories;
-                            calCount++;
-                        }
-                        if (dayData.steps > 0) {
-                            stepSum += parseInt(dayData.steps);
-                            stepCount++;
-                            stepTotal += parseInt(dayData.steps);
-                        }
+                        if (dayData.calories > 0 || checkDate === realToday) { calSum += dayData.calories; calCount++; }
+                        if (dayData.steps > 0) { stepSum += parseInt(dayData.steps); stepCount++; stepTotal += parseInt(dayData.steps); }
                         if (dayData.gym === true) gymTotal++;
                     }
                 }
@@ -1181,9 +1047,7 @@
         }
 
         function updateTopMetrics() {
-            ensureDayExists(viewDateStr);
-            const dayData = history[viewDateStr];
-
+            ensureDayExists(viewDateStr); const dayData = historyObj[viewDateStr];
             dispGym.innerHTML = dayData.gym ? `<span class="val-green">Yes</span>` : `<span class="val-red">No</span>`;
             dispWeight.innerHTML = dayData.weight ? `<span class="val-neutral">${dayData.weight} kg</span>` : `<span class="val-neutral">--</span>`;
             dispSteps.innerHTML = dayData.steps ? `<span class="val-neutral">${parseInt(dayData.steps).toLocaleString()}</span>` : `<span class="val-neutral">--</span>`;
@@ -1191,7 +1055,7 @@
 
         function updateUI() {
             ensureDayExists(viewDateStr);
-            const dayData = history[viewDateStr];
+            const dayData = historyObj[viewDateStr];
             const currentCals = dayData.calories;
 
             dateLabel.textContent = formatDisplayDate(viewDateStr);
@@ -1201,21 +1065,13 @@
             inWeight.value = dayData.weight || '';
             inSteps.value = dayData.steps || '';
             
-            if (dayData.gym === true) {
-                btnGymYes.classList.add('active-yes');
-                btnGymNo.classList.remove('active-no');
-            } else {
-                btnGymYes.classList.remove('active-yes');
-                btnGymNo.classList.add('active-no');
-            }
+            if (dayData.gym === true) { btnGymYes.classList.add('active-yes'); btnGymNo.classList.remove('active-no'); } 
+            else { btnGymYes.classList.remove('active-yes'); btnGymNo.classList.add('active-no'); }
 
-            updateTopMetrics();
-            saveState();
+            updateTopMetrics(); saveState();
 
             const percentage = Math.min(currentCals / dailyTarget, 1);
-            const offset = CIRCUMFERENCE - (percentage * CIRCUMFERENCE);
-            progressCircle.style.strokeDashoffset = offset;
-
+            progressCircle.style.strokeDashoffset = 534.07 - (percentage * 534.07);
             if (currentCals > dailyTarget) progressCircle.classList.add('over-target');
             else progressCircle.classList.remove('over-target');
 
@@ -1223,43 +1079,26 @@
         }
 
         function exportCSV() {
-            if (Object.keys(history).length === 0) {
-                alert("No data to export yet!");
-                return;
-            }
-
+            if (Object.keys(historyObj).length === 0) { alert("No data to export yet!"); return; }
             let csvContent = "Date,Calories,Weight (kg),Gym Session,Steps\n";
-            const sortedDates = Object.keys(history).sort();
-            
-            sortedDates.forEach(date => {
-                let d = history[date];
+            Object.keys(historyObj).sort().forEach(date => {
+                let d = historyObj[date];
                 csvContent += `${date},${d.calories || 0},${d.weight || ""},${d.gym ? "Yes" : "No"},${d.steps || ""}\n`;
             });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
-            link.setAttribute("href", URL.createObjectURL(blob));
+            link.setAttribute("href", URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })));
             link.setAttribute("download", `fitness_history_${getRealTodayStr()}.csv`);
-            link.style.visibility = 'hidden';
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
-        document.addEventListener("visibilitychange", function() {
+        document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'visible') {
                 const checkToday = getRealTodayStr();
-                if (checkToday !== realToday) {
-                    realToday = checkToday;
-                    viewDateStr = realToday; 
-                    updateUI();
-                }
+                if (checkToday !== realToday) { realToday = checkToday; viewDateStr = realToday; updateUI(); }
             }
         });
 
-        updateUI();
-        updateTimerSettings();
+        updateUI(); updateTimerSettings();
     </script>
 </body>
 </html>
