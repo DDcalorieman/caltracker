@@ -601,6 +601,7 @@
 
     <script>
         // --- 1. DATA SETUP ---
+        // Enhanced: Initialize localStorage on load
         let rawHistory = JSON.parse(localStorage.getItem('calorieHistory')) || {};
         let historyObj = {};
         for (let date in rawHistory) {
@@ -611,11 +612,13 @@
             }
         }
         
+        // Ensure daily target is loaded from local storage correctly
         let dailyTarget = parseInt(localStorage.getItem('dailyTarget')) || 2500;
         const CIRCUMFERENCE = 534.07; 
 
         function getRealTodayStr() {
             const now = new Date();
+            // Defaulting to ISO String pattern (YYYY-MM-DD) for clean historical storage and averging
             return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         }
 
@@ -723,11 +726,13 @@
             }
         }
 
+        // --- 5. THE CORE STORAGE FUNCTION ---
+        // This is where everything gets bundled and pushed to the browser's persistent cache
         function saveState() {
             localStorage.setItem('calorieHistory', JSON.stringify(historyObj));
         }
 
-        // --- 5. DATA INPUT HANDLERS ---
+        // --- 6. DATA INPUT HANDLERS ---
         function changeDate(direction) {
             viewDateStr = addDaysStr(viewDateStr, direction);
             updateUI();
@@ -747,6 +752,9 @@
             historyObj[viewDateStr].calories += amount;
             if (historyObj[viewDateStr].calories < 0) historyObj[viewDateStr].calories = 0;
             
+            // Explicitly call the state save logic here
+            saveState();
+
             display.style.transform = 'scale(1.05)';
             setTimeout(() => display.style.transform = 'scale(1)', 100);
             updateUI();
@@ -786,14 +794,18 @@
 
         function confirmReset(isYes) {
             document.getElementById('reset-modal').classList.add('hidden');
-            if (isYes) { historyObj[viewDateStr].calories = 0; updateUI(); }
+            if (isYes) { 
+                historyObj[viewDateStr].calories = 0; 
+                saveState(); // Ensure the reset clears out the log
+                updateUI(); 
+            }
         }
 
-        function setGym(status) { ensureDayExists(viewDateStr); historyObj[viewDateStr].gym = status; updateUI(); }
+        function setGym(status) { ensureDayExists(viewDateStr); historyObj[viewDateStr].gym = status; saveState(); updateUI(); }
         function setWeight(val) { ensureDayExists(viewDateStr); historyObj[viewDateStr].weight = val ? parseFloat(val).toFixed(1) : null; saveState(); updateTopMetrics(); calculateRollingStats(); }
         function setSteps(val) { ensureDayExists(viewDateStr); historyObj[viewDateStr].steps = val ? parseInt(val) : null; saveState(); updateTopMetrics(); calculateRollingStats(); }
 
-        // --- 6. CALENDAR LOGIC ---
+        // --- 7. CALENDAR LOGIC ---
         function changeCalMonth(direction) { calViewDate.setMonth(calViewDate.getMonth() + direction); renderCalendar(); }
 
         function renderCalendar() {
@@ -828,7 +840,7 @@
             }
         }
 
-        // --- 7. TIMER ENGINE ---
+        // --- 8. TIMER ENGINE ---
         let timerInterval; let isTimerRunning = false; let timerPhase = 'idle';
         let currentSet = 1; let timeRemaining = 0; let totalPhaseTime = 0; 
 
@@ -918,7 +930,7 @@
             updateTimerSettings();
         }
 
-        // --- 8. CHARTS ENGINE ---
+        // --- 9. CHARTS ENGINE ---
         let currentChartMetric = 'calories';
         let currentChartDays = 7;
         let currentChartType = 'bar';
@@ -1064,7 +1076,7 @@
             }
         }
 
-        // --- 9. MAIN UI STATS & RENDER ---
+        // --- 10. MAIN UI STATS & RENDER ---
         function calculateRollingStats() {
             let calSum = 0, calCount = 0; let stepSum = 0, stepCount = 0, stepTotal = 0;
             let gymTotal = 0; let weightSum = 0, weightCount = 0;
@@ -1137,6 +1149,7 @@
             }
         });
 
+        // Fire the core functionality loops on render
         updateUI(); updateTimerSettings();
     </script>
 </body>
