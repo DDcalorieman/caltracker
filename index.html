@@ -235,7 +235,7 @@
         .toggle-btn.active-yes { background: #233526; border-color: #34C759; color: #34C759; }
         .toggle-btn.active-no { background: #3a1c1c; border-color: #FF3B30; color: #FF3B30; }
 
-        /* Stats */
+        /* Stats & Data Actions */
         .stats-container {
             width: 100%; border-top: 1px solid #222;
             padding-top: 2rem; padding-bottom: 2rem;
@@ -267,11 +267,22 @@
 
         .stat-card { padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; }
 
-        .export-btn, .return-btn {
+        .data-actions-grid {
+            display: grid; grid-template-columns: 1fr; gap: 0.75rem;
+        }
+        .data-actions-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;
+        }
+
+        .export-btn, .return-btn, .backup-btn, .restore-btn {
             width: 100%; background: transparent; border: 1px solid #333; color: #888;
             padding: 1rem; border-radius: 16px; font-size: 0.9rem; cursor: pointer;
             text-transform: uppercase; letter-spacing: 1px; transition: background-color 0.2s, color 0.2s;
         }
+        
+        .backup-btn { color: #34C759; border-color: #233526; }
+        .restore-btn { color: #0A84FF; border-color: #1c3654; }
+        
         .return-btn {
             background: #ffffff; color: #000000; border: none; padding: 1.25rem;
             font-size: 1.1rem; font-weight: 600; margin-top: auto;
@@ -490,7 +501,14 @@
                 </div>
             </div>
 
-            <button class="export-btn" onclick="exportCSV()">Export Data (CSV)</button>
+            <div class="data-actions-grid">
+                <button class="export-btn" onclick="exportCSV()">Export Data (CSV)</button>
+                <div class="data-actions-row">
+                    <button class="backup-btn" onclick="backupDataJSON()">Backup (.JSON)</button>
+                    <button class="restore-btn" onclick="triggerRestore()">Restore Data</button>
+                    <input type="file" id="import-file" style="display:none" accept=".json" onchange="restoreDataJSON(event)">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -600,8 +618,17 @@
     </div>
 
     <script>
+        // --- 0. NEW: REQUEST PERSISTENT STORAGE ---
+        // This tells the browser NOT to delete data to save space if the phone storage gets full
+        async function requestPersistentStorage() {
+            if (navigator.storage && navigator.storage.persist) {
+                const isPersisted = await navigator.storage.persist();
+                console.log(`Persistent storage granted: ${isPersisted}`);
+            }
+        }
+        requestPersistentStorage();
+
         // --- 1. DATA SETUP ---
-        // Enhanced: Initialize localStorage on load
         let rawHistory = JSON.parse(localStorage.getItem('calorieHistory')) || {};
         let historyObj = {};
         for (let date in rawHistory) {
@@ -612,13 +639,11 @@
             }
         }
         
-        // Ensure daily target is loaded from local storage correctly
         let dailyTarget = parseInt(localStorage.getItem('dailyTarget')) || 2500;
         const CIRCUMFERENCE = 534.07; 
 
         function getRealTodayStr() {
             const now = new Date();
-            // Defaulting to ISO String pattern (YYYY-MM-DD) for clean historical storage and averging
             return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         }
 
@@ -727,7 +752,6 @@
         }
 
         // --- 5. THE CORE STORAGE FUNCTION ---
-        // This is where everything gets bundled and pushed to the browser's persistent cache
         function saveState() {
             localStorage.setItem('calorieHistory', JSON.stringify(historyObj));
         }
@@ -752,7 +776,6 @@
             historyObj[viewDateStr].calories += amount;
             if (historyObj[viewDateStr].calories < 0) historyObj[viewDateStr].calories = 0;
             
-            // Explicitly call the state save logic here
             saveState();
 
             display.style.transform = 'scale(1.05)';
@@ -796,7 +819,7 @@
             document.getElementById('reset-modal').classList.add('hidden');
             if (isYes) { 
                 historyObj[viewDateStr].calories = 0; 
-                saveState(); // Ensure the reset clears out the log
+                saveState(); 
                 updateUI(); 
             }
         }
@@ -1012,7 +1035,7 @@
                     }
                     ctx.fillRect(padX + (i * barW) + (gap/2), h - padYBottom - barH, barW - gap, Math.max(barH, 1));
 
-                    // Callout Text Top (Rotated vertically to ensure it always fits thin bars)
+                    // Callout Text Top
                     if (val > 0 && currentChartDays <= 30) {
                         ctx.save();
                         ctx.translate(xCenter, h - padYBottom - barH - 6);
@@ -1129,6 +1152,7 @@
             calculateRollingStats();
         }
 
+        // --- 11. DATA BACKUP & EXPORT ---
         function exportCSV() {
             if (Object.keys(historyObj).length === 0) { alert("No data to export yet!"); return; }
             let csvContent = "Date,Calories,Weight (kg),Gym Session,Steps\n";
@@ -1140,6 +1164,43 @@
             link.setAttribute("href", URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })));
             link.setAttribute("download", `fitness_history_${getRealTodayStr()}.csv`);
             document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        // NEW: Backup data as a JSON file to the phone's physical storage
+        function backupDataJSON() {
+            if (Object.keys(historyObj).length === 0) { alert("No data to backup yet!"); return; }
+            const dataStr = JSON.stringify(historyObj);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const link = document.createElement("a");
+            link.setAttribute("href", URL.createObjectURL(blob));
+            link.setAttribute("download", `calorie_tracker_backup_${getRealTodayStr()}.json`);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        // NEW: Trigger the hidden file input
+        function triggerRestore() {
+            document.getElementById('import-file').click();
+        }
+
+        // NEW: Read the JSON file and restore the data into localStorage
+        function restoreDataJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    historyObj = importedData;
+                    saveState();
+                    updateUI();
+                    alert("Data restored successfully!");
+                } catch (err) {
+                    alert("Invalid backup file. Please make sure you selected a valid .JSON backup.");
+                }
+                // Reset file input so the same file can be selected again if needed
+                event.target.value = '';
+            };
+            reader.readAsText(file);
         }
 
         document.addEventListener("visibilitychange", () => {
